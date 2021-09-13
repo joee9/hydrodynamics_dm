@@ -7,13 +7,13 @@
 #%%
 from hd_params import *
 
-from aux_dm.hd_eos 			import *
-from aux_dm.hd_equations 	import *
-from aux_dm.hd_ic 			import *
-from aux_dm.hd_ops 			import *
-from aux_dm.hd_riemann 		import *
-from aux_dm.hd_write 		import *
-from aux_dm.hd_evolution 	import *
+from aux.hd_eos 		import *
+from aux.hd_equations 	import *
+from aux.hd_ic 			import *
+from aux.hd_ops 		import *
+from aux.hd_riemann 	import *
+from aux.hd_write 		import *
+from aux.hd_evolution 	import *
 
 
 NUM_STORED = T_STEPS_ARRAY
