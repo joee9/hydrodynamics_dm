@@ -1,6 +1,6 @@
 ## Hydrodynamical neutron star simulation
 
-This project is the simulation of a neutron star, containing bosonic dark matter, using a model of the neutron star as a fluid. The bosonic dark matter is modelled as a complex scalar field.
+This project is the simulation of a neutron star, with the star modelled as a fluid.
 
 ### Code
 Broken into "auxillary" files (like `C` headers) and the main simulation file. Global parameters and variables are declared in `hd_params.py`.
