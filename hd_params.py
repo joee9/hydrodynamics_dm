@@ -18,8 +18,8 @@ path = "data/"
 
 # ========== EQUATION OF STATE
 
-darkmatter 	= True
-charge		= True
+darkmatter 	= False 
+charge		= False
 
 eos_UR = 0
 eos_polytrope = 1
@@ -43,17 +43,17 @@ if eos_SLy:
 
 # general parameters
 # p_val = 0.0001 		# the p value in input file names; not sure what it represents
-p_val = 0.0001 		# the p value in input file names; not sure what it represents
-vphi_val = 0.0001
-vc_val = 0.00316228	# vc value used in file names
-g_val = 0.65
+p_val = 1e-4
+# vphi_val = 0.0001
+# vc_val = 0.00316228	# vc value used in file names
+# g_val = 0.65
 # ========== INITIAL CONDITIONS
 
 PRIM_IC_GAUSSIAN = 0
 PRIM_IC_TOV = 1
 
-SF_IC_GAUSSIAN = 0
-SF_IC_TOV = 1
+# SF_IC_GAUSSIAN = 0
+# SF_IC_TOV = 1
 
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
@@ -71,24 +71,24 @@ if PRIM_IC_TOV:
 
 # scalar fields
 
-if SF_IC_GAUSSIAN:
-	# parameters for first scalar field
-	A_1 = 1e-5
-	r0_1 = 5
-	d_1 = 2
+# if SF_IC_GAUSSIAN:
+# 	# parameters for first scalar field
+# 	A_1 = 1e-5
+# 	r0_1 = 5
+# 	d_1 = 2
 
-	# parameters for second scalar field
-	A_2 = 1e-5
-	r0_2 = 10
-	d_2 = 2
+# 	# parameters for second scalar field
+# 	A_2 = 1e-5
+# 	r0_2 = 10
+# 	d_2 = 2
 
-	SF_IC = "Gaussian"
+# 	SF_IC = "Gaussian"
 
-if SF_IC_TOV:
-	if eos_polytrope:
-		SF_IC = "TOV solution polytrope"
-	elif eos_SLy:
-		SF_IC = "TOV solution SLy"
+# if SF_IC_TOV:
+# 	if eos_polytrope:
+# 		SF_IC = "TOV solution polytrope"
+# 	elif eos_SLy:
+# 		SF_IC = "TOV solution SLy"
 
 
 

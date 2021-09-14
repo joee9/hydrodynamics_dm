@@ -31,7 +31,7 @@ one_fluid = True
 # PARAMETERS
 
 if make_static_solution:
-	p0 = 2e-3
+	p0 = 1e-4
 
 if p0_analysis:
 	pmin = 1e-6
@@ -41,7 +41,7 @@ if p0_analysis:
 	p0_vals = np.logspace(round(np.log10(pmin)),round(np.log10(pmax)),NUM_POINTS, base=10.0)
 
 r0 = 0.000001
-rmax = 50
+rmax = 200
 dr = 0.02
 
 
@@ -50,9 +50,9 @@ r_vals = np.arange(r0,rmax,dr)
 
 m0 = 0
 
-path = "tov_output"
-if make_static_solution: path+= "/static"
-elif p0_analysis: path+= "/p0_analysis"
+path = "../input"
+# if make_static_solution: path+= "/static"
+# elif p0_analysis: path+= "/p0_analysis"
 
 # FUNCTIONS
 

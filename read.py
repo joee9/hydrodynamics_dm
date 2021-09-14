@@ -15,7 +15,7 @@ save_fig = 0
 
 dim = "s"
 # dim = "ringdown"
-t = 500
+t = 20
 
 f_alpha = 0
 f_a		= 0
@@ -23,23 +23,23 @@ f_a		= 0
 f_Pi	= 0
 f_Phi	= 0
 
-f_P 	= 0
+f_P 	= 1
 f_rho	= 0
 f_v		= 0
 
-f_phi1	= 0
-f_X1 	= 0
-f_Y1	= 0
+# f_phi1	= 0
+# f_X1 	= 0
+# f_Y1	= 0
 
-f_phi2	= 0
-f_X2 	= 0
-f_Y2	= 0
+# f_phi2	= 0
+# f_X2 	= 0
+# f_Y2	= 0
 
-f_A_r	= 0
-f_z 	= 0
-f_Omega = 0
+# f_A_r	= 0
+# f_z 	= 0
+# f_Omega = 0
 
-absphi	= 1
+# absphi	= 1
 
 with open(f"data/{output_number:d}-0params.txt", "r") as params:
 	pass
@@ -85,63 +85,62 @@ if f_v:
 	df = pd.read_csv(f"data/{output_number:d}-v.txt", header=None)
 	title = "$v$"
 	save_name = "v"
-if f_phi1:
-	df = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
-	title = "$\\varphi_1$"
-	save_name = "varphi1"
-if f_X1:
-	df = pd.read_csv(f"data/{output_number:d}-X1.txt", header=None)
-	title = "$X_1$"
-	save_name = "X1"
-if f_Y1:
-	df = pd.read_csv(f"data/{output_number:d}-Y1.txt", header=None)
-	title = "$Y_1$"
-	save_name = "Y1"
-if f_phi2:
-	df = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
-	title = "$\\varphi_2$"
-	save_name = "varphi2"
-if f_X2:
-	df = pd.read_csv(f"data/{output_number:d}-X2.txt", header=None)
-	title = "$X_2$"
-	save_name = "X2"
-if f_Y2:
-	df = pd.read_csv(f"data/{output_number:d}-Y2.txt", header=None)
-	title = "$Y_2$"
-	save_name = "Y2"
-if f_A_r:
-	df = pd.read_csv(f"data/{output_number:d}-A_r.txt", header=None)
-	title = "$A_r$"
-	save_name = "Ar"
-if f_z:
-	df = pd.read_csv(f"data/{output_number:d}-z.txt", header=None)
-	title = "$Z$"
-	save_name = "z"
-if f_Omega:
-	df = pd.read_csv(f"data/{output_number:d}-Y2.txt", header=None)
-	title = "$\\Omega$"
-	save_name = "Omega"
-if absphi:
-	phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
-	phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
-	phi1_vals = phi1.iloc[i,:].to_numpy()
-	phi2_vals = phi2.iloc[i,:].to_numpy()
+# if f_phi1:
+# 	df = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
+# 	title = "$\\varphi_1$"
+# 	save_name = "varphi1"
+# if f_X1:
+# 	df = pd.read_csv(f"data/{output_number:d}-X1.txt", header=None)
+# 	title = "$X_1$"
+# 	save_name = "X1"
+# if f_Y1:
+# 	df = pd.read_csv(f"data/{output_number:d}-Y1.txt", header=None)
+# 	title = "$Y_1$"
+# 	save_name = "Y1"
+# if f_phi2:
+# 	df = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
+# 	title = "$\\varphi_2$"
+# 	save_name = "varphi2"
+# if f_X2:
+# 	df = pd.read_csv(f"data/{output_number:d}-X2.txt", header=None)
+# 	title = "$X_2$"
+# 	save_name = "X2"
+# if f_Y2:
+# 	df = pd.read_csv(f"data/{output_number:d}-Y2.txt", header=None)
+# 	title = "$Y_2$"
+# 	save_name = "Y2"
+# if f_A_r:
+# 	df = pd.read_csv(f"data/{output_number:d}-A_r.txt", header=None)
+# 	title = "$A_r$"
+# 	save_name = "Ar"
+# if f_z:
+# 	df = pd.read_csv(f"data/{output_number:d}-z.txt", header=None)
+# 	title = "$Z$"
+# 	save_name = "z"
+# if f_Omega:
+# 	df = pd.read_csv(f"data/{output_number:d}-Y2.txt", header=None)
+# 	title = "$\\Omega$"
+# 	save_name = "Omega"
+# if absphi:
+# 	phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
+# 	phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
+# 	phi1_vals = phi1.iloc[i,:].to_numpy()
+# 	phi2_vals = phi2.iloc[i,:].to_numpy()
 
-	mag = []
-	for k in range(NUM_SPOINTS):
-		varphi1 = phi1_vals[k]
-		varphi2 = phi2_vals[k]
-		# print(f"{k=}{varphi1=}{varphi2=}")
-		mag.append(np.sqrt(varphi1**2 + varphi2**2))
+# 	mag = []
+# 	for k in range(NUM_SPOINTS):
+# 		varphi1 = phi1_vals[k]
+# 		varphi2 = phi2_vals[k]
+# 		# print(f"{k=}{varphi1=}{varphi2=}")
+# 		mag.append(np.sqrt(varphi1**2 + varphi2**2))
 	
-	title = "$|\\varphi|$"
-	save_name = "absvarphi"
+# 	title = "$|\\varphi|$"
+# 	save_name = "absvarphi"
 
 	
 if dim == "s":
 	h_axis = rs.to_numpy().flatten()
-	if absphi: v_axis = mag
-	else: v_axis = df.iloc[i,:].to_numpy()
+	v_axis = df.iloc[i,:].to_numpy()
 	title += f", $t$ = {t:.1f}"
 	h_label = "$r$"
 
@@ -158,7 +157,7 @@ if dim == "ringdown":
 # plt.ylim([0,1.1E-6])
 # plt.xlim([0,20])
 title += f", Trial: {output_number:d}"
-save_name = f"plots/{output_number:d}-{save_name},t{t:.2f}.pdf"
+# save_name = f"plots/{output_number:d}-{save_name},t{t:.2f}.pdf"
 # plt.yscale("log")
 plt.title(title)
 plt.xlabel(h_label)

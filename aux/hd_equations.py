@@ -4,7 +4,7 @@
 # from logging import debug
 from numba.core.decorators import jit
 from hd_params import *
-from aux_dm.hd_eos import *
+from aux.hd_eos import *
 # NUMBA_DISABLE_JIT = 1
 
 # ========== GRID
@@ -51,7 +51,9 @@ def da_dt(i,alpha,a,cons,sc1,sc2):
 
 
 @njit
-def du_dt(i, rho0, u, phi1, phi2, z, a, a_p1h, a_m1h, alpha, alpha_p1h, alpha_m1h, F1_p1h, F1_m1h, F2_p1h, F2_m1h):
+# def du_dt(i, rho0, u, phi1, phi2, z, a, a_p1h, a_m1h, alpha, alpha_p1h, alpha_m1h, F1_p1h, F1_m1h, F2_p1h, F2_m1h):
+# def du_dt(i, rho0, u, a, a_p1h, a_m1h, alpha, alpha_p1h, alpha_m1h, F1_p1h, F1_m1h, F2_p1h, F2_m1h):
+def du_dt(i, rho0, u, a, a_p1h, a_m1h, alpha, alpha_p1h, alpha_m1h, F1_p1h, F1_m1h, F2_p1h, F2_m1h):
 	"""
 	The time evolution of u
 	F1, F2: the F value at a given spatial boundary (still a two component vector)
@@ -76,22 +78,21 @@ def du_dt(i, rho0, u, phi1, phi2, z, a, a_p1h, a_m1h, alpha, alpha_p1h, alpha_m1
 
 	secondBracket = (sbTerm(alpha_p1h,a_p1h,F2_p1h) - sbTerm(alpha_m1h,a_m1h,F2_m1h))
 
-	s = S(u, r, phi1, phi2, z, alpha, a, rho0)
+	s = S(u, r, alpha, a, rho0)
 
 	return -firstFrac * firstBracket - 1/dr * secondBracket + s
 
 @njit
-def S(u,r,phi1,phi2,z,alpha,a,rho0):
+def S(u,r,alpha,a,rho0):
 	"""
 	the value of S at a grid
 	alpha: make sure to pass an averaged value, for surrounding boundaries (i.e. (i+1) + i/2 for indices) 
 	"""
-	th = theta(u,phi1,phi2,z, r,alpha,a,rho0)
-	om = omega(u,phi1,phi2,z, r,alpha,a,rho0)
-	return np.array([om + th, om - th])
+	th = theta(u,r,alpha,a, rho0)
+	return np.array([th, -th])
 
 @njit
-def theta(u, phi1, phi2, z, r, alpha, a, rho0):
+def theta(u, r, alpha, a, rho0):
 	"""
 	the value of theta at a gridpoint
 	alpha: make sure to pass an averaged value, for surrounding boundaries (i.e. (i+1) + i/2 for indices) 
@@ -100,38 +101,63 @@ def theta(u, phi1, phi2, z, r, alpha, a, rho0):
 	rho_ = rho(u, rho0)
 	p = P(rho_)
 	v = V(u,p)
+	firstBrackets = ((Pi-Phi)*v - (Pi+Phi))
+	secondBrackets = (8 * np.pi * r * a * alpha * p + ((a * alpha)/(2*r))*(1-(1/a**2)))
+	lastTerm = (a*alpha/(2*r)) * (1-(1/a**2))*p
+	return (1/2) * firstBrackets * secondBrackets + lastTerm
 
-	Tf_tt, Tf_tr, Tf_rr = calcT_f(u,v,p,a,alpha)
-	Tb_tt, Tb_tr, Tb_rr = calcT_b(r,phi1,phi2,z,a,alpha)
+# @njit
+# def S(u,r,phi1,phi2,z,alpha,a,rho0):
+# 	"""
+# 	the value of S at a grid
+# 	alpha: make sure to pass an averaged value, for surrounding boundaries (i.e. (i+1) + i/2 for indices) 
+# 	"""
+# 	th = theta(u,phi1,phi2,z, r,alpha,a,rho0)
+# 	om = omega(u,phi1,phi2,z, r,alpha,a,rho0)
+# 	return np.array([om + th, om - th])
 
-	Ttot_tt = Tf_tt + Tb_tt
-	Ttot_tr = Tf_tr + Tb_tr
-	Ttot_rr = Tf_rr + Tb_rr
+# @njit
+# def theta(u, phi1, phi2, z, r, alpha, a, rho0):
+# 	"""
+# 	the value of theta at a gridpoint
+# 	alpha: make sure to pass an averaged value, for surrounding boundaries (i.e. (i+1) + i/2 for indices) 
+# 	"""
+# 	Phi, Pi = u
+# 	rho_ = rho(u, rho0)
+# 	p = P(rho_)
+# 	v = V(u,p)
 
-	first_scale = 4 * np.pi * G * r * a * alpha
-	first_brackets = 2 * (alpha**2/a**2) * Ttot_tr * Tf_tr + Ttot_rr * Tf_tt + Ttot_tt * Tf_rr
-	second_scale = (alpha/a) * (a**2 - 1)/(2*r)
-	second_brackets = 1/2 * ((Pi - Phi) * v - (Pi+Phi)) + p
+# 	Tf_tt, Tf_tr, Tf_rr = calcT_f(u,v,p,a,alpha)
+# 	Tb_tt, Tb_tr, Tb_rr = calcT_b(r,phi1,phi2,z,a,alpha)
 
-	return first_scale * first_brackets + second_scale * second_brackets
+# 	Ttot_tt = Tf_tt + Tb_tt
+# 	Ttot_tr = Tf_tr + Tb_tr
+# 	Ttot_rr = Tf_rr + Tb_rr
 
-@njit
-def omega(u, phi1, phi2, z, r, alpha, a, rho0):
+# 	first_scale = 4 * np.pi * G * r * a * alpha
+# 	first_brackets = 2 * (alpha**2/a**2) * Ttot_tr * Tf_tr + Ttot_rr * Tf_tt + Ttot_tt * Tf_rr
+# 	second_scale = (alpha/a) * (a**2 - 1)/(2*r)
+# 	second_brackets = 1/2 * ((Pi - Phi) * v - (Pi+Phi)) + p
 
-	rho_ = rho(u, rho0)
-	p = P(rho_)
-	v = V(u,p)
+# 	return first_scale * first_brackets + second_scale * second_brackets
 
-	Tf_tt, Tf_tr, Tf_rr = calcT_f(u,v,p,a,alpha)
-	Tb_tt, Tb_tr, Tb_rr = calcT_b(r,phi1,phi2,z,a,alpha)
+# @njit
+# def omega(u, phi1, phi2, z, r, alpha, a, rho0):
 
-	Ttot_tt = Tf_tt + Tb_tt
-	Ttot_tr = Tf_tr + Tb_tr
-	Ttot_rr = Tf_rr + Tb_rr
+# 	rho_ = rho(u, rho0)
+# 	p = P(rho_)
+# 	v = V(u,p)
 
-	scale = -4*np.pi*G*r*alpha**2
+# 	Tf_tt, Tf_tr, Tf_rr = calcT_f(u,v,p,a,alpha)
+# 	Tb_tt, Tb_tr, Tb_rr = calcT_b(r,phi1,phi2,z,a,alpha)
 
-	return scale * (Tf_tr * (Ttot_rr - Ttot_tt) - Ttot_tr * (Tf_rr - Tf_tt))
+# 	Ttot_tt = Tf_tt + Tb_tt
+# 	Ttot_tr = Tf_tr + Tb_tr
+# 	Ttot_rr = Tf_rr + Tb_rr
+
+# 	scale = -4*np.pi*G*r*alpha**2
+
+# 	return scale * (Tf_tr * (Ttot_rr - Ttot_tt) - Ttot_tr * (Tf_rr - Tf_tt))
 
 
 
@@ -219,26 +245,36 @@ def calcTtot_tr(cons, sc1, sc2, a, alpha):
 # initial a
 @njit
 # def fa0(i, r,a,Pi,Phi):
-def fa0(r, a, cons, sc1, sc2, z):
+# def fa0(r, a, cons, sc1, sc2, z):
+def fa0(r, a, cons):
 
 	if r == 0:
 		return 0
 	else:
-		Ttot_tt = calcTtot_tt(r, cons, sc1, sc2, z, a)
-		return -4 * np.pi * r * a**3 * Ttot_tt - a * (a**2 - 1) / (2 * r)
+		Pi, Phi = cons
+		# Ttot_tt = calcTtot_tt(r, cons, sc1, sc2, z, a)
+		# return -4 * np.pi * r * a**3 * Ttot_tt - a * (a**2 - 1) / (2 * r)
+		return 4 * np.pi * r * a**3 * (Pi + Phi) / 2 - a * (a**2 - 1) / (2 * r)
 
 # time evolution of a
 @njit
-def fa(i,alpha,a,cons,sc1,sc2):
+# def fa(i,alpha,a,cons,sc1,sc2):
+def fa(i,alpha,a,cons):
 	r = R(i)
-	Ttot_tr = calcTtot_tr(cons, sc1, sc2, a, alpha)
-	return -4 * np.pi * r * alpha * a**2 * Ttot_tr 
+	# Ttot_tr = calcTtot_tr(cons, sc1, sc2, a, alpha)
+	Pi, Phi = cons
+	# return -4 * np.pi * r * alpha * a**2 * Ttot_tr 
+	return -4 * np.pi * r * alpha * a**2 * (Pi-Phi)/2
 
 # alpha (eq. 46)
 @njit
-def falpha(alpha_p1, r, cons, prim, sc1, sc2, z, a):
-	# brackets = 1/2 * (Pi - Phi) * v + P
-	brackets = calcTtot_rr(r,cons,prim,sc1,sc2,z,a)
+# def falpha(alpha_p1, r, cons, prim, sc1, sc2, z, a):
+def falpha(alpha_p1, r, cons, prim, a):
+	Pi, Phi = cons
+	P, rho, v = prim
+	
+	brackets = 1/2 * (Pi - Phi) * v + P
+	# brackets = calcTtot_rr(r,cons,prim,sc1,sc2,z,a)
 	braces = 4 * np.pi * r * a**2 * brackets + (a**2 - 1)/(2*r)
 	exponential = np.exp(-dr*braces)
 	return alpha_p1 * exponential

@@ -2,9 +2,9 @@
 # Functions for solving the Riemann problem using HLLE.
 
 from hd_params import *
-from aux_dm.hd_ops import initializeEvenVPs
-from aux_dm.hd_equations import R, calcPrims
-from aux_dm.hd_eos import dP_drho
+from aux.hd_ops import initializeEvenVPs
+from aux.hd_equations import R, calcPrims
+from aux.hd_eos import dP_drho
 
 # ========== SLOPE LIMITER
 
