@@ -12,14 +12,14 @@ from time import process_time
 
 record_data = True
 record_ringdown = 1
-output_number = 2
+output_number = 1
 
 path = "data/"
 
 # ========== NUMERICAL INTEGRATION METHOD
 
-int_modified_euler = 0
-int_rk3 = 1
+int_modified_euler = 1
+int_rk3 = 0
 
 if int_modified_euler:	int_method = "modified euler"
 if int_rk3:				int_method = "RK3"
@@ -49,19 +49,13 @@ if eos_polytrope:
 if eos_SLy:
 	pass
 
-# general parameters
-# p_val = 0.0001 		# the p value in input file names; not sure what it represents
+# general parameters for TOV solutions
 p_val = 1e-4
-# vphi_val = 0.0001
-# vc_val = 0.00316228	# vc value used in file names
-# g_val = 0.65
+
 # ========== INITIAL CONDITIONS
 
 PRIM_IC_GAUSSIAN = 0
 PRIM_IC_TOV = 1
-
-# SF_IC_GAUSSIAN = 0
-# SF_IC_TOV = 1
 
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
@@ -76,28 +70,6 @@ if PRIM_IC_TOV:
 		PRIM_IC = "TOV solution polytrope"	# from Ben
 	elif eos_SLy:
 		PRIM_IC = "TOV solution SLy"			# from Ben
-
-# scalar fields
-
-# if SF_IC_GAUSSIAN:
-# 	# parameters for first scalar field
-# 	A_1 = 1e-5
-# 	r0_1 = 5
-# 	d_1 = 2
-
-# 	# parameters for second scalar field
-# 	A_2 = 1e-5
-# 	r0_2 = 10
-# 	d_2 = 2
-
-# 	SF_IC = "Gaussian"
-
-# if SF_IC_TOV:
-# 	if eos_polytrope:
-# 		SF_IC = "TOV solution polytrope"
-# 	elif eos_SLy:
-# 		SF_IC = "TOV solution SLy"
-
 
 
 # ========== GRID PARAMETERS
@@ -127,7 +99,7 @@ R_POINTS_FILE = 1000
 # step between spatial points in file
 R_STEP_FILE = NUM_SPOINTS // R_POINTS_FILE
 
-RECORD_INTERVAL = 100 # temporary interval to write to file
+RECORD_INTERVAL = 500 # temporary interval to write to file
 
 RING_INTERVAL = 5
 
