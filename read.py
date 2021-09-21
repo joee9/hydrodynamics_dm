@@ -9,13 +9,13 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 2
+output_number = 1
 save_fig = 0
 
-dim = "s"
-# dim = "ringdown"
+# dim = "s"
+dim = "ringdown"
 
-t = 45
+t = 2495
 
 f_alpha = 0
 f_a		= 0
@@ -105,17 +105,17 @@ if save_fig:
 N = len(v_axis)
 FT = fftshift(fft(v_axis))
 
-tmin = df.head(n=1).iloc[:,2].to_numpy()[0]
-tmax = df.tail(n=1).iloc[:,2].to_numpy()[0]
+tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
+tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
 
-dt = df.head(n=2).iloc[:,2].to_numpy()[1] - df.head(n=1).iloc[:,2].to_numpy()[0]
+dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
 
 
 Df = 1/(tmax-tmin)
 freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
 plt.xscale("log")
 plt.yscale("log")
-plt.plot(freqs, np.abs(FT[0:]))
+plt.plot(freqs, np.abs(FT[1:])) # need to find a way to exclude one value in a better way
 
 
 # %%
