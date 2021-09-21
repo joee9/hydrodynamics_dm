@@ -14,6 +14,7 @@ save_fig = 0
 
 # dim = "s"
 dim = "ringdown"
+FFT = 1
 
 t = 2495
 
@@ -72,51 +73,59 @@ if f_v:
 	save_name = "v"
 
 	
+title += f", Trial: {output_number:d}"
+save_name = f"plots/{output_number:d}-{save_name}"
+
 if dim == "s":
 	h_axis = rs.to_numpy().flatten()
 	v_axis = df.iloc[i,:].to_numpy()
 	title += f", $t$ = {t:.1f}"
 	h_label = "$r$"
 
+	save_name += f",{t:.2f}"
+
 
 if dim == "ringdown":
-	title += f", r = 0"
+	title += f", $r = 0$"
 	df = pd.read_csv(f"data/{output_number:d}-ringdown.txt", header=None)
 	h_axis = df.iloc[:,1].to_numpy() # time
 	v_axis = df.iloc[:,4].to_numpy() # pressure
 	h_label = "t"
 
+	save_name += f",ringdown"
+
+if FFT:
+
+	N = len(v_axis)
+	FT = fftshift(fft(v_axis[1:]))
+
+	tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
+	tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
+
+	dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
 
 
-title += f", Trial: {output_number:d}"
-save_name = f"plots/{output_number:d}-{save_name},t{t:.2f}.pdf"
+	Df = 1/(tmax-tmin)
+	freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
+	plt.xscale("log")
+	plt.yscale("log")
+
+	h_axis = freqs
+	v_axis = np.abs(FT)
+
+	save_name += f",fft"
+	title += f", FFT"
+	h_label = f"$f$"
+
+save_name += f".pdf"
+
 
 plt.title(title)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
-
 		
 if save_fig:
 	plt.savefig(save_name)
-
-# %%
-
-# fft
-N = len(v_axis)
-FT = fftshift(fft(v_axis))
-
-tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
-tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
-
-dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
-
-
-Df = 1/(tmax-tmin)
-freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
-plt.xscale("log")
-plt.yscale("log")
-plt.plot(freqs, np.abs(FT[1:])) # need to find a way to exclude one value in a better way
-
 
 # %%
 
