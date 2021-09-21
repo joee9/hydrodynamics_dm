@@ -125,7 +125,7 @@ for n in range(NUM_TPOINTS-1):
 		ss = elapsed_time % 60
 
 		if hh > 0:
-			e_string += f"{hh:1d}:"
+			e_string += f"{hh:d}:"
 
 		e_string += f"{mm - hh*60:02d}:{ss:02d}"
 		secs = curr_time - start_time
@@ -171,7 +171,7 @@ mm = elapsed_time // 60
 ss = elapsed_time % 60
 
 if hh > 0:
-	e_string += f"{hh:1d}:"
+	e_string += f"{hh:d}:"
 
 e_string += f"{mm - hh*60:02d}:{ss:02d}"
 
