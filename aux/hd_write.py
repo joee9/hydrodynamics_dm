@@ -21,8 +21,8 @@ def params_print():
 
 		f.write("\n")
 
-		f.write(f"Dark Matter		= {darkmatter}\n")
 		f.write(f"EOS				= {eos}\n")
+		f.write(f"Int. Method		= {int_method}\n")
 
 		if eos_UR:
 			f.write(f"	Gamma			= {Gamma}\n")

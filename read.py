@@ -10,12 +10,12 @@ from scipy.fft import fft,fftshift
 #%%
 
 # NUM_SPOINTS = 5000
-output_number = 1
+output_number = 2
 save_fig = 0
 
 dim = "s"
 # dim = "ringdown"
-t = 500
+t = 45
 
 f_alpha = 0
 f_a		= 0

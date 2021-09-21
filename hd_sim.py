@@ -175,7 +175,16 @@ for n in range(NUM_TPOINTS-1):
 
 		curr_time = process_time()
 		elapsed_time = int(curr_time - first_time)
-		e_string = f"{elapsed_time // 60:02d}:{elapsed_time%60:02d}"
+		e_string = ""
+		# if elapsed_time // 3600 >= 0: e_string += f"{elapsed_time // 3600:02d}:"
+		hh = elapsed_time // 3600
+		mm = elapsed_time // 60
+		ss = elapsed_time % 60
+
+		if hh > 0:
+			e_string += f"{hh:1d}"
+
+		e_string += f"{mm - hh*60:02d}:{ss:02d}"
 		secs = curr_time - start_time
 		start_time = curr_time
 		elapsed_time = curr_time - first_time
@@ -187,7 +196,10 @@ for n in range(NUM_TPOINTS-1):
 	if t == NUM_STORED-1:
 		next = 0
 
-	evolution(cons,prim,a,alpha,curr,next)
+	if int_rk3:
+		evolution_rk3(cons,prim,a,alpha,curr,next)
+	elif int_modified_euler:
+		evolution_modified_euler(cons,prim,a,alpha,curr,next)
 
 	arrays = [
 		cons[next,:,Pi_i], 

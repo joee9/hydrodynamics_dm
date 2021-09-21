@@ -16,6 +16,14 @@ output_number = 2
 
 path = "data/"
 
+# ========== NUMERICAL INTEGRATION METHOD
+
+int_modified_euler = 0
+int_rk3 = 1
+
+if int_modified_euler:	int_method = "modified euler"
+if int_rk3:				int_method = "RK3"
+
 # ========== EQUATION OF STATE
 
 darkmatter 	= False 
