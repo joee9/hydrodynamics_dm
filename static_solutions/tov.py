@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 # EOS
 eos_UR = 0
-eos_polytrope = 1
-eos_SLy = 0
+eos_polytrope = 0
+eos_SLy = 1
 
 if eos_UR:
 	Gamma = 1.3
@@ -67,7 +67,7 @@ def rho_from_P(p):
 	elif eos_polytrope:
 		return (p/K)**(1/Gamma)
 	elif eos_SLy:
-		f = interp1d(SLy_rhos, SLy_ps)
+		f = interp1d(SLy_ps, SLy_rhos)
 		return f(p)
 		
 

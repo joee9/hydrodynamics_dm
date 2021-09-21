@@ -15,7 +15,7 @@ save_fig = 0
 
 dim = "s"
 # dim = "ringdown"
-t = 20
+t = 500
 
 f_alpha = 0
 f_a		= 0
@@ -192,22 +192,22 @@ plt.plot(freqs, np.abs(FT[0:]))
 
 # static solutions
 eos_UR = 0
-eos_polytrope = 1
-eos_SLy = 0
+eos_polytrope = 0
+eos_SLy = 1
 
-p0 = 1e-3
+p0 = 1e-4
 vphi0 = 1e-3
 Lambda = 0
 dr = 0.02
 rmin = 0
-rmax = 20
+rmax = 100
 
-f_P 	= 0
+f_P 	= 1
 f_rho	= 0
 
-f_phi1	= 0
-f_X1 	= 0
-f_Y2	= 1
+# f_phi1	= 0
+# f_X1 	= 0
+# f_Y2	= 1
 
 if eos_polytrope:
 	eos = "polytrope_"
@@ -215,10 +215,10 @@ if eos_polytrope:
 	Gamma = 2
 	params = f"K{K:.1f}_gamma{Gamma:.1f}_"
 elif eos_SLy:
-	eos = "SLy"
+	eos = "SLy_"
 	params = ""
 
-s = f"input/{eos}{params}p{p0:.8f}_vphi{vphi0:.8f}_lam{Lambda:.3f}_dr{dr:.3f}_"
+s = f"input/{eos}{params}p{p0:.8f}_dr{dr:.3f}_"
 
 if f_P:
 	s += "P.txt"
@@ -228,18 +228,18 @@ elif f_rho:
 	s += "rho.txt"
 	df = pd.read_csv(s, header=None)
 	title = "$\\rho$"
-elif f_phi1:
-	s += "varphi.txt"
-	df = pd.read_csv(s, header=None)
-	title = "$\\varphi$"
-elif f_X1:
-	s += "X.txt"
-	df = pd.read_csv(s, header=None)
-	title = "$X$"
-elif f_Y2:
-	s += "Y.txt"
-	df = pd.read_csv(s, header=None)
-	title = "$Y$"
+# elif f_phi1:
+# 	s += "varphi.txt"
+# 	df = pd.read_csv(s, header=None)
+# 	title = "$\\varphi$"
+# elif f_X1:
+# 	s += "X.txt"
+# 	df = pd.read_csv(s, header=None)
+# 	title = "$X$"
+# elif f_Y2:
+# 	s += "Y.txt"
+# 	df = pd.read_csv(s, header=None)
+# 	title = "$Y$"
 
 rs = np.arange(rmin, rmax, dr)
 h_axis = rs

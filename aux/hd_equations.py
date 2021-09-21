@@ -97,7 +97,7 @@ def theta(u, r, alpha, a, rho0):
 	the value of theta at a gridpoint
 	alpha: make sure to pass an averaged value, for surrounding boundaries (i.e. (i+1) + i/2 for indices) 
 	"""
-	Phi, Pi = u
+	Pi, Phi = u
 	rho_ = rho(u, rho0)
 	p = P(rho_)
 	v = V(u,p)
