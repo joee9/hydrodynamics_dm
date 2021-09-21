@@ -42,10 +42,17 @@ f_v		= 0
 # absphi	= 1
 
 with open(f"data/{output_number:d}-0params.txt", "r") as params:
-	pass
+	s = params.readline()
+	interval = int(s.replace("Write interval	= ", ""))
+
+print(interval)
+
+# s = "Quickly"
+# str = s.replace("ly", "")
+# print(str)
 
 dt = 0.01
-interval = 100
+# interval = 100
 i = round(t /(interval * dt))
 # i = 320
 
