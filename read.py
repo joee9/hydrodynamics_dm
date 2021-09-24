@@ -9,17 +9,16 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 1
+output_number = 2
+
+dim = "s"
+# dim = "ringdown"
+FFT = 0
+
 save_fig = 0
 
-# dim = "s"
-dim = "ringdown"
-FFT = 1
+t = 50
 
-t = 2495
-
-f_alpha = 0
-f_a		= 0
 
 f_Pi	= 0
 f_Phi	= 0
@@ -28,94 +27,104 @@ f_P 	= 1
 f_rho	= 0
 f_v		= 0
 
+f_alpha = 0
+f_a		= 0
+
 
 # ========== READING IN FILES, PARAMETERS
 
-with open(f"data/{output_number:d}-0params.txt", "r") as params:
+path = f"data/{output_number:d}"
+
+with open(f"{path:s}-0params.txt", "r") as params:
 	s = params.readline()
 	interval = int(s.replace("Write interval	= ", ""))
 
 dt = 0.01
 i = round(t /(interval * dt))
 
-# plotting parameters: t and r
-rs = pd.read_csv(f"data/{output_number:d}-r.txt", header=None)
-# ts = pd.read_csv(f"data/{output_number:d}-t.txt", header=None)
-
-
-# Files
-if f_alpha:
-	df = pd.read_csv(f"data/{output_number:d}-alpha.txt", header=None)
-	title = "$\\alpha$"
-	save_name = "alpha"
-if f_a:
-	df = pd.read_csv(f"data/{output_number:d}-a.txt", header=None)
-	title = "$a$"
-	save_name = "a"
+# Plotting parameters
 if f_Pi:
-	df = pd.read_csv(f"data/{output_number:d}-Pi.txt", header=None)
+	file_path = f"{path:s}-Pi.txt"
 	title = "$\\Pi$"
+	save_name = "Pi"
+	ring_idx = 2
 if f_Phi:
-	df = pd.read_csv(f"data/{output_number:d}-Phi.txt", header=None)
+	file_path = f"{path:s}-Phi.txt"
 	title = "$\\Phi$"
 	save_name = "Phi"
+	ring_idx = 3
 if f_P:
-	df = pd.read_csv(f"data/{output_number:d}-P.txt", header=None)
+	file_path = f"{path:s}-P.txt"
 	title = "$P$"
 	save_name = "P"
+	ring_idx = 4
 if f_rho:
-	df = pd.read_csv(f"data/{output_number:d}-rho.txt", header=None)
+	file_path = f"{path:s}-rho.txt"
 	title = "$\\rho$"
 	save_name = "rho"
+	ring_idx = 5
 if f_v:
-	df = pd.read_csv(f"data/{output_number:d}-v.txt", header=None)
+	file_path = f"{path:s}-v.txt"
 	title = "$v$"
 	save_name = "v"
-
+	ring_idx = 6
+if f_alpha:
+	file_path = f"{path}-alpha.txt"
+	title = "$\\alpha$"
+	save_name = "alpha"
+	ring_idx = 7
+if f_a:
+	file_path = f"{path:s}-a.txt"
+	title = "$a$"
+	save_name = "a"
+	ring_idx = 8
 	
 title += f", Trial: {output_number:d}"
 save_name = f"plots/{output_number:d}-{save_name}"
 
 if dim == "s":
+
+	df = pd.read_csv(file_path, header=None)
+	rs = pd.read_csv(f"{path:s}-r.txt", header=None)
+
 	h_axis = rs.to_numpy().flatten()
 	v_axis = df.iloc[i,:].to_numpy()
-	title += f", $t$ = {t:.1f}"
 	h_label = "$r$"
 
+	title += f", $t$ = {t:.1f}"
 	save_name += f",{t:.2f}"
-
 
 if dim == "ringdown":
 	title += f", $r = 0$"
-	df = pd.read_csv(f"data/{output_number:d}-ringdown.txt", header=None)
+	df = pd.read_csv(f"{path:s}-ringdown.txt", header=None)
 	h_axis = df.iloc[:,1].to_numpy() # time
-	v_axis = df.iloc[:,4].to_numpy() # pressure
+	v_axis = df.iloc[:,ring_idx].to_numpy() # pressure
 	h_label = "t"
 
 	save_name += f",ringdown"
 
-if FFT:
+	if FFT:
 
-	N = len(v_axis)
-	FT = fftshift(fft(v_axis[1:]))
+		N = len(v_axis)
+		FT = fftshift(fft(v_axis[1:]))
 
-	tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
-	tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
+		tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
+		tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
 
-	dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
+		dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
 
 
-	Df = 1/(tmax-tmin)
-	freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
-	plt.xscale("log")
-	plt.yscale("log")
+		Df = 1/(tmax-tmin)
+		freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
+		plt.xscale("log")
+		plt.yscale("log")
 
-	h_axis = freqs
-	v_axis = np.abs(FT)
+		h_axis = freqs
+		v_axis = np.abs(FT)
 
-	save_name += f",fft"
-	title += f", FFT"
-	h_label = f"$f$"
+		save_name += f",fft"
+		title += f", FFT"
+		h_label = f"$f$"
 
 save_name += f".pdf"
 
