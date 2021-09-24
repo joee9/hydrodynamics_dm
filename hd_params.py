@@ -80,7 +80,7 @@ rmax	= 100
 
 gamma 	= 0.5
 tmin	= 0
-tmax	= 1000
+tmax	= 8000
 
 dt = gamma * dr
 

@@ -128,8 +128,26 @@ if dim == "ringdown":
 
 save_name += f".pdf"
 
+# sly_vals = [
+# 	0.148462348345648,
+# 	0.209995270508381,
+# 	0.254676789337527,
+# 	0.327847798115150,
+# 	0.364224267545439,
+# 	0.440072685837974,
+# 	0.498652374377900
+# ]
+# sly_vals = np.array(sly_vals)
+# # sly_vals = sly_vals/(2*np.pi)
+
+# for i in range(len(sly_vals)):
+# 	plt.plot([sly_vals[i], sly_vals[i]], [1e-7,1e-1])
+
 
 plt.title(title)
+# plt.xlim(1e-1,1e0)
+# plt.xlim(0,5500)
+# plt.ylim(0.000075,.000125)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
 		

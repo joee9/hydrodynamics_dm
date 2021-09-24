@@ -103,13 +103,12 @@ if record_data:
 	# file containing all t values
 	ts_out = open(f"{path}{output_number}-t.txt", "w")
 
-
-	# print out all parameters
-	params_print()
-
-
 if record_ringdown:
 	ringdown = open(f"{path}{output_number}-ringdown.txt", "w")
+
+if record_data or record_ringdown:
+	# print out all parameters
+	params_print()
 
 
 def output_write(array, n):
