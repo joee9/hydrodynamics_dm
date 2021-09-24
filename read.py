@@ -40,7 +40,7 @@ with open(f"{path:s}-0params.txt", "r") as params:
 	s = params.readline()
 	interval = int(s.replace("Write interval	= ", ""))
 	s = params.readline()
-	ring_interval = int(s.replace("Ring interval\t\t= ", ""))
+	ring_interval = int(s.replace("Ring interval\t= ", ""))
 
 dt = 0.01
 i = round(t /(interval * dt))
