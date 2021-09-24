@@ -11,6 +11,7 @@ def params_print():
 	with open(f"{path}{output_number}-0params.txt", "w") as f:
 		# commonly checked parameters
 		f.write(f"Write interval	= {RECORD_INTERVAL}\n")
+		f.write(f"Ring interval		= {RING_INTERVAL}\n")
 		f.write(f"dr				= {dr}\n")
 		f.write(f"dt				= {dt}\n")
 		f.write(f"rmin			= {rmin}\n")

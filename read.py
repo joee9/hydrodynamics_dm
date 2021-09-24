@@ -11,14 +11,15 @@ from scipy.fft import fft,fftshift
 
 output_number = 2
 
-dim = "s"
-# dim = "ringdown"
-FFT = 0
+# dim = "s"
+dim = "ringdown"
+FFT = 1
 
 save_fig = 0
 
-t = 50
-
+t = 3500
+# for "s", this is the time snapshot.
+# for "ringdown", the max time plotted to. -1 will plot all values
 
 f_Pi	= 0
 f_Phi	= 0
@@ -38,6 +39,8 @@ path = f"data/{output_number:d}"
 with open(f"{path:s}-0params.txt", "r") as params:
 	s = params.readline()
 	interval = int(s.replace("Write interval	= ", ""))
+	s = params.readline()
+	ring_interval = int(s.replace("Ring interval\t\t= ", ""))
 
 dt = 0.01
 i = round(t /(interval * dt))
@@ -95,10 +98,21 @@ if dim == "s":
 	save_name += f",{t:.2f}"
 
 if dim == "ringdown":
-	title += f", $r = 0$"
+
 	df = pd.read_csv(f"{path:s}-ringdown.txt", header=None)
-	h_axis = df.iloc[:,1].to_numpy() # time
-	v_axis = df.iloc[:,ring_idx].to_numpy() # pressure
+
+	tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
+	tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
+
+	if t == -1: 
+		last_idx = round(tmax/(ring_interval * dt))
+	else:
+		last_idx = round(t/(ring_interval * dt))
+		tmax = t
+
+	title += f", $r = 0$"
+	h_axis = df.iloc[:last_idx,1].to_numpy() # time
+	v_axis = df.iloc[:last_idx,ring_idx].to_numpy() # pressure
 	h_label = "t"
 
 	save_name += f",ringdown"
@@ -106,16 +120,12 @@ if dim == "ringdown":
 	if FFT:
 
 		N = len(v_axis)
-		FT = fftshift(fft(v_axis[1:]))
-
-		tmin = df.head(n=1).iloc[:,1].to_numpy()[0]
-		tmax = df.tail(n=1).iloc[:,1].to_numpy()[0]
+		FT = fftshift(fft(v_axis))
 
 		dt = df.head(n=3).iloc[:,1].to_numpy()[2] - df.head(n=2).iloc[:,1].to_numpy()[1]
 
-
 		Df = 1/(tmax-tmin)
-		freqs = np.arange(-1/(2*dt), +1/(2*dt), Df)
+		freqs = np.arange(-1/(2*dt), +1/(2*dt), Df) * 2*np.pi
 		plt.xscale("log")
 		plt.yscale("log")
 
@@ -128,7 +138,25 @@ if dim == "ringdown":
 
 save_name += f".pdf"
 
+# sly_vals = [
+# 	0.148462348345648,
+# 	0.209995270508381,
+# 	0.254676789337527,
+# 	0.327847798115150,
+# 	0.364224267545439,
+# 	0.440072685837974,
+# 	0.498652374377900
+# ]
+# sly_vals = np.array(sly_vals)
+# # sly_vals = sly_vals/(2*np.pi)
+
+# for i in range(len(sly_vals)):
+# 	plt.plot([sly_vals[i], sly_vals[i]], [1e-7,1e-1])
+
+
+
 plt.title(title)
+# plt.xlim(1e-1,1e0)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
 		
