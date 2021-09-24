@@ -49,18 +49,6 @@ if record_data:
 	rho_out 	= open(f"{path}{output_number}-rho.txt", "w")
 	v_out 		= open(f"{path}{output_number}-v.txt", "w")
 
-	# phi1_out	= open(f"{path}{output_number}-phi1.txt", "w")
-	# X1_out  	= open(f"{path}{output_number}-X1.txt", "w")
-	# Y1_out 		= open(f"{path}{output_number}-Y1.txt", "w")
-
-	# phi2_out	= open(f"{path}{output_number}-phi2.txt", "w")
-	# X2_out  	= open(f"{path}{output_number}-X2.txt", "w")
-	# Y2_out 		= open(f"{path}{output_number}-Y2.txt", "w")
-
-	# A_r_out	    = open(f"{path}{output_number}-A_r.txt", "w")
-	# z_out  	    = open(f"{path}{output_number}-z.txt", "w")
-	# Omega_out 	= open(f"{path}{output_number}-Omega.txt", "w")
-
 	alpha_out 	= open(f"{path}{output_number}-alpha.txt", "w")
 	a_out 		= open(f"{path}{output_number}-a.txt", "w")
 
@@ -71,18 +59,6 @@ if record_data:
 		P_out,
 		rho_out,
 		v_out,
-
-		# phi1_out,
-		# X1_out,
-		# Y1_out,
-
-		# phi2_out,
-		# X2_out,
-		# Y2_out,
-
-		# A_r_out,
-		# z_out,
-		# Omega_out,
 
 		alpha_out,
 		a_out,
@@ -155,18 +131,6 @@ def output_close():
 		P_out.close()
 		rho_out.close()
 		v_out.close()
-
-		# phi1_out.close()
-		# X1_out.close()
-		# Y1_out.close()
-
-		# phi2_out.close()
-		# X2_out.close()
-		# Y2_out.close()
-
-		# A_r_out.close()
-		# z_out.close()
-		# Omega_out.close()
 
 		alpha_out.close()
 		a_out.close()
