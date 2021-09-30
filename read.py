@@ -9,15 +9,15 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 2
+output_number = 1
 
 # dim = "s"
 dim = "ringdown"
-FFT = 1
+FFT = 0
 
-save_fig = 0
+save_fig = 1
 
-t = 3500
+t = -1
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
 
@@ -38,9 +38,9 @@ path = f"data/{output_number:d}"
 
 with open(f"{path:s}-0params.txt", "r") as params:
 	s = params.readline()
-	interval = int(s.replace("Write interval	= ", ""))
+	interval = int(s.replace("Write interval    = ", ""))
 	s = params.readline()
-	ring_interval = int(s.replace("Ring interval\t= ", ""))
+	ring_interval = int(s.replace("Ring interval     = ", ""))
 
 dt = 0.01
 i = round(t /(interval * dt))
@@ -82,7 +82,6 @@ if f_a:
 	save_name = "a"
 	ring_idx = 8
 	
-title += f", Trial: {output_number:d}"
 save_name = f"plots/{output_number:d}-{save_name}"
 
 if dim == "s":
@@ -134,9 +133,12 @@ if dim == "ringdown":
 		v_axis = np.abs(FT)
 
 		save_name += f",fft"
-		title += ", $t_{max}$ = " + f"{t}" + ", FFT"
+		if t != -1:
+			title += ", $t_{max}$ = " + f"{t}" 
+		title += ", FFT"
 		h_label = f"$f$"
 
+title += f", Trial: {output_number:d}"
 save_name += f".pdf"
 
 # sly_vals = [

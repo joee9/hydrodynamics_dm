@@ -26,10 +26,10 @@ def params_print():
 		f.write(f"Int. Method       = {int_method}\n")
 
 		if eos_UR:
-			f.write(f"    Gamma     = {Gamma}\n")
+			f.write(f"    Gamma         = {Gamma}\n")
 		if eos_polytrope:
-			f.write(f"    K         = {K}\n")
-			f.write(f"    Gamma     = {Gamma}\n")
+			f.write(f"    K             = {K}\n")
+			f.write(f"    Gamma         = {Gamma}\n")
 		f.write(f"\n")
 		f.write(f"Primitive IC      = {PRIM_IC}\n")
 		# f.write(f"Scalar Field IC = {SF_IC}\n")
