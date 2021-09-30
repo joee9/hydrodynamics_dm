@@ -10,7 +10,7 @@ from time import process_time
 
 # for recording data
 
-record_data = True
+record_data = 1
 record_ringdown = 1
 output_number = 1
 
@@ -21,33 +21,33 @@ path = "data/"
 int_modified_euler = 1
 int_rk3 = 0
 
-if int_modified_euler:	int_method = "modified euler"
-if int_rk3:				int_method = "RK3"
+if int_modified_euler:  int_method = "modified euler"
+if int_rk3:             int_method = "RK3"
 
 # ========== EQUATION OF STATE
 
-darkmatter 	= False 
-charge		= False
+# darkmatter 	= False 
+# charge		= False
 
 eos_UR = 0
 eos_polytrope = 0
 eos_SLy = 1
 
 
-if eos_UR: 			eos = "ultra relativistic"
-if eos_polytrope: 	eos = "polytrope"
-if eos_SLy: 		eos = "SLy"
+if eos_UR:          eos = "ultra relativistic"
+if eos_polytrope:   eos = "polytrope"
+if eos_SLy:         eos = "SLy"
 
 # initialize necessary parameters given an eos
 if eos_UR:
-	Gamma = 1.3
+    Gamma = 1.3
 
 if eos_polytrope:
-	K = 100
-	Gamma = 2
+    K = 100
+    Gamma = 2
 
 if eos_SLy:
-	pass
+    pass
 
 # general parameters for TOV solutions
 p_val = 1e-4
@@ -59,28 +59,28 @@ PRIM_IC_TOV = 1
 
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
-	# gives a gaussian for rho, then used for finding P
-	A = 1E-5 	# amplitude
-	r0 = 5		# center
-	d = 2		# exponential argument scale
-	PRIM_IC = "Gaussian"
+    # gives a gaussian for rho, then used for finding P
+    A = 1E-5 	# amplitude
+    r0 = 5		# center
+    d = 2		# exponential argument scale
+    PRIM_IC = "Gaussian"
 
 if PRIM_IC_TOV:
-	if eos_polytrope:
-		PRIM_IC = "TOV solution polytrope"	# from Ben
-	elif eos_SLy:
-		PRIM_IC = "TOV solution SLy"			# from Ben
+    if eos_polytrope:
+        PRIM_IC = "TOV solution polytrope"	# from Ben
+    elif eos_SLy:
+        PRIM_IC = "TOV solution SLy"			# from Ben
 
 
 # ========== GRID PARAMETERS
 
-dr 		= 0.02
-rmin 	= 0
-rmax	= 100
+dr      = 0.02
+rmin    = 0
+rmax    = 100
 
-gamma 	= 0.5
-tmin	= 0
-tmax	= 8000
+gamma   = 0.5
+tmin    = 0
+tmax    = 8000
 
 dt = gamma * dr
 
@@ -119,10 +119,10 @@ NR_TOL = 1E-7
 mu = 1
 Lambda = 0
 G = 1
-if charge:
-	g = .65*np.sqrt(8*np.pi)
-elif not charge:
-	g = 1e-10
+# if charge:
+#   g = .65*np.sqrt(8*np.pi)
+# elif not charge:
+#   g = 1e-10
 
 # for indexing
 P_i = 0
