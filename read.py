@@ -116,6 +116,7 @@ if dim == "ringdown":
 	h_label = "t"
 
 	save_name += f",ringdown"
+	if t != -1: save_name += f",tmax{t}"
 
 	if FFT:
 
@@ -133,7 +134,7 @@ if dim == "ringdown":
 		v_axis = np.abs(FT)
 
 		save_name += f",fft"
-		title += f", FFT"
+		title += ", $t_{max}$ = " + f"{t}" + ", FFT"
 		h_label = f"$f$"
 
 save_name += f".pdf"
@@ -152,8 +153,6 @@ save_name += f".pdf"
 
 # for i in range(len(sly_vals)):
 # 	plt.plot([sly_vals[i], sly_vals[i]], [1e-7,1e-1])
-
-
 
 plt.title(title)
 # plt.xlim(1e-1,1e0)

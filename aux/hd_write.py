@@ -10,28 +10,28 @@ from aux.hd_equations import R
 def params_print():
 	with open(f"{path}{output_number}-0params.txt", "w") as f:
 		# commonly checked parameters
-		f.write(f"Write interval	= {RECORD_INTERVAL}\n")
-		f.write(f"Ring interval\t= {RING_INTERVAL}\n")
-		f.write(f"dr				= {dr}\n")
-		f.write(f"dt				= {dt}\n")
-		f.write(f"rmin			= {rmin}\n")
-		f.write(f"rmax			= {rmax}\n")
-		f.write(f"gamma			= {gamma}\n")
-		f.write(f"tmin			= {tmin}\n")
-		f.write(f"tmax			= {tmax}\n")
+		f.write(f"Write interval    = {RECORD_INTERVAL}\n")
+		f.write(f"Ring interval     = {RING_INTERVAL}\n")
+		f.write(f"dr                = {dr}\n")
+		f.write(f"dt                = {dt}\n")
+		f.write(f"rmin              = {rmin}\n")
+		f.write(f"rmax              = {rmax}\n")
+		f.write(f"gamma             = {gamma}\n")
+		f.write(f"tmin              = {tmin}\n")
+		f.write(f"tmax              = {tmax}\n")
 
 		f.write("\n")
 
-		f.write(f"EOS				= {eos}\n")
-		f.write(f"Int. Method		= {int_method}\n")
+		f.write(f"EOS               = {eos}\n")
+		f.write(f"Int. Method       = {int_method}\n")
 
 		if eos_UR:
-			f.write(f"	Gamma			= {Gamma}\n")
+			f.write(f"    Gamma     = {Gamma}\n")
 		if eos_polytrope:
-			f.write(f"	K			= {K}\n")
-			f.write(f"	Gamma		= {Gamma}\n")
+			f.write(f"    K         = {K}\n")
+			f.write(f"    Gamma     = {Gamma}\n")
 		f.write(f"\n")
-		f.write(f"Primitive IC	= {PRIM_IC}\n")
+		f.write(f"Primitive IC      = {PRIM_IC}\n")
 		# f.write(f"Scalar Field IC = {SF_IC}\n")
 
 		# TODO: add print statments that print out the number of tsteps, rsteps, etc. that are actually saved to file
