@@ -9,15 +9,19 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 1
-save_fig = 1
+output_number = 4
+save_fig = 0
 
 # dim = "s"
 dim = "ringdown"
-FFT = 0
-FFT_spikes = 0 # reads in frequencies from the file path/freqs.txt for plotting
 
-t = -1
+# fft parameters
+FFT = 1
+FFT_spikes = 1 # reads in frequencies from the file path/freqs.txt for plotting
+fft_xmin = 1e-2
+fft_xmax = 1e0
+
+t = 2000
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
 
@@ -143,12 +147,15 @@ if dim == "ringdown":
 			with open(f"{path:s}-freqs.txt") as f:
 				val = f.readline()
 				while (val != ""):
+					val = float(val)
 					vals.append(val)
 					val = f.readline()
 				
 			vals = np.array(vals)
 			for i in range(len(vals)):
-				plt.plot([vals[i], vals[i]], [1e-7,1e-1])
+				plt.plot([vals[i], vals[i]], [1e-6,1e-1])
+		
+		plt.xlim(fft_xmin, fft_xmax)
 
 
 
@@ -157,7 +164,6 @@ save_name += f".pdf"
 
 
 plt.title(title)
-# plt.xlim(1e-1,1e0)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
 		
