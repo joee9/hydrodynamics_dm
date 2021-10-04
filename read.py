@@ -17,13 +17,13 @@ dim = "ringdown"
 
 # fft parameters
 FFT = 1
-FFT_spikes = 1 # reads in frequencies from the file path/freqs.txt for plotting
+FFT_spikes = 1 	# reads in frequencies from the file path/freqs.txt for plotting
 fft_xmin = 1e-2
 fft_xmax = 1e0
 
-t = 2000
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
+t = 2000
 
 f_Pi	= 0
 f_Phi	= 0
@@ -168,7 +168,7 @@ plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
 		
 if save_fig:
-	plt.savefig(save_name)
+	plt.savefig(save_name, bbox_inches = "tight")
 
 # %%
 
