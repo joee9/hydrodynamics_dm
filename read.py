@@ -10,12 +10,12 @@ from scipy.fft import fft,fftshift
 #%%
 
 output_number = 1
+save_fig = 1
 
 # dim = "s"
 dim = "ringdown"
 FFT = 0
-
-save_fig = 1
+FFT_spikes = 0 # reads in frequencies from the file path/freqs.txt for plotting
 
 t = -1
 # for "s", this is the time snapshot.
@@ -138,23 +138,23 @@ if dim == "ringdown":
 		title += ", FFT"
 		h_label = f"$f$"
 
+		if FFT_spikes:
+			vals = []
+			with open(f"{path:s}-freqs.txt") as f:
+				val = f.readline()
+				while (val != ""):
+					vals.append(val)
+					val = f.readline()
+				
+			vals = np.array(vals)
+			for i in range(len(vals)):
+				plt.plot([vals[i], vals[i]], [1e-7,1e-1])
+
+
+
 title += f", Trial: {output_number:d}"
 save_name += f".pdf"
 
-# sly_vals = [
-# 	0.148462348345648,
-# 	0.209995270508381,
-# 	0.254676789337527,
-# 	0.327847798115150,
-# 	0.364224267545439,
-# 	0.440072685837974,
-# 	0.498652374377900
-# ]
-# sly_vals = np.array(sly_vals)
-# # sly_vals = sly_vals/(2*np.pi)
-
-# for i in range(len(sly_vals)):
-# 	plt.plot([sly_vals[i], sly_vals[i]], [1e-7,1e-1])
 
 plt.title(title)
 # plt.xlim(1e-1,1e0)
