@@ -114,7 +114,7 @@ def output_write(array, n):
 	
 	if record_ringdown and ((n+1) % RING_INTERVAL == 0 or n == 0):
 		i = NUM_VPOINTS # record at r = 0
-		ringdown.write(f"{n}, {n*dt:.2f},")
+		ringdown.write(f"{n},{n*dt:.2f},")
 		for n in range(len(array)):
 			curr = array[n]
 			ringdown.write(f"{curr[i]:.15e},")
