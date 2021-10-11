@@ -218,7 +218,7 @@ def rootFinder(u, rho0):
 		rho_new = rho_old - f_rho(u, rho_old) / df_drho(u, rho_old)
 		if rho_new < 0:
 			rho_new = rho_old / 2
-			break
+			# break
 		elif tol(rho_new, rho_old) < NR_TOL:
 			break
 		else:

@@ -12,7 +12,7 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 1
+output_number = 4
 
 path = "data/"
 

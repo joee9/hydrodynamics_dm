@@ -8,8 +8,12 @@ from aux.hd_eos import P
 
 def getvals(input):
 	vals = []
+
+	for i in range(NUM_VPOINTS):
+		vals.append(0)
+
 	with open(input, "r") as f:
-		for i in range(NUM_SPOINTS):
+		for i in range(NUM_SPOINTS-NUM_VPOINTS):
 			val = f.readline()
 			if (val != ""):	vals.append(val)
 			else: vals.append(0)
