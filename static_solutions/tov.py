@@ -15,12 +15,14 @@ eos_polytrope = 0
 eos_SLy = 1
 
 if eos_UR:
+	eos = "UR"
 	Gamma = 1.3
 if eos_polytrope:
+	eos = "polytrope"
 	Gamma = 2
 	K = 100
 if eos_SLy:
-	pass
+	eos = "SLy"
 
 # MODES
 make_static_solution = 1
@@ -50,9 +52,8 @@ r_vals = np.arange(r0,rmax,dr)
 
 m0 = 0
 
-path = "../input"
-# if make_static_solution: path+= "/static"
-# elif p0_analysis: path+= "/p0_analysis"
+if make_static_solution: path = "../input"
+elif p0_analysis: path = "./p0_analysis"
 
 # FUNCTIONS
 
@@ -127,7 +128,7 @@ if make_static_solution:
 
 if p0_analysis:
 	if one_fluid:
-		output = open(f"{path}/p{pmin:.3e}-p{pmax:.3e}.txt","w")
+		output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt","w")
 
 		print(f"Number of points:{len(p0_vals)}")
 
@@ -151,11 +152,11 @@ if p0_analysis:
 
 #%%
 # ========== ANALYSIS
-path = "tov_output/p0_analysis"
+path = "p0_analysis"
 pmin = 1e-6
 pmax = 1e-1
 
-df = pd.read_csv(f"{path}/p{pmin:.3e}-p{pmax:.3e}.txt", header=None)
+df = pd.read_csv(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt", header=None)
 
 M_vals = df.iloc[:,1].to_numpy()
 R_vals = df.iloc[:,2].to_numpy()  
@@ -170,19 +171,23 @@ M_crit = 1/(p0_interp(p0_crit))
 print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
 
 plt.xscale("log")
-plt.title("$M(P_0)$")
+plt.title(f"$M(P_0)$, {eos}")
 plt.xlabel("$P_0$")
 plt.plot(p0_vals, M_vals)
 plt.plot(p0_crit, M_crit, "ro")
+plt.savefig(f"./p0_analysis,polytrope.pdf", bbox_inches = "tight")
 print()
 
 
 #%%
+# from aux.hd_eos import P 
 # # make SLy file
 # rhos = np.logspace(-14,0,14000,base=10.0)
 
-# with open("SLy_vals.txt", "w") as f:
+# with open("./static_solutions/0-SLy_vals.vals", "w") as f:
 # 	for i in range(len(rhos)):
 # 		f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
 
-# If this is needed, make sure to use the function P from aux_dm.hd_eos
+# If this is needed, make sure to use the function P from aux.hd_eos;
+# make sure this file is in the home directory, and that
+# eos_SLy is set correctly in hd_params.

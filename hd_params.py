@@ -12,7 +12,7 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 4
+output_number = 7
 
 path = "data/"
 
@@ -80,7 +80,7 @@ rmax    = 100
 
 gamma   = 0.5
 tmin    = 0
-tmax    = 8000
+tmax    = 5000
 
 dt = gamma * dr
 

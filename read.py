@@ -9,8 +9,8 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 3
-save_fig = 1
+output_number = 6
+save_fig = 0
 
 # dim = "s"
 dim = "ringdown"
@@ -23,7 +23,7 @@ fft_xmax = 1e0
 
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
-t = 100
+t = -1
 
 f_Pi	= 0
 f_Phi	= 0
@@ -166,7 +166,6 @@ save_name += f".pdf"
 plt.title(title)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
-plt.xlim(0,30)
 		
 if save_fig:
 	plt.savefig(save_name, bbox_inches = "tight")
