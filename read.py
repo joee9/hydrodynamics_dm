@@ -9,8 +9,8 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 6
-save_fig = 0
+output_number = 2
+save_fig = 1
 
 # dim = "s"
 dim = "ringdown"
@@ -215,3 +215,37 @@ h_label = "$r$"
 plt.title(title)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
+
+# %%
+
+from scipy.interpolate import interp1d
+from scipy.optimize import minimize, fmin
+# analyze M vs. P(0) analyses from tov
+
+path = "./static_solutions/p0_analysis"
+# eos = "polytrope"
+eos = "SLy"
+pmin = 1e-6
+pmax = 1e-1
+
+df = pd.read_csv(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt", header=None)
+
+M_vals = df.iloc[:,1].to_numpy()
+R_vals = df.iloc[:,2].to_numpy()  
+p0_vals = df.iloc[:,0].to_numpy()
+
+crit_p0_guess = p0_vals[np.argmax(M_vals)]
+
+p0_interp = interp1d(p0_vals,1/M_vals)
+p0_crit = fmin(p0_interp, crit_p0_guess)[0]
+M_crit = 1/(p0_interp(p0_crit))
+
+print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
+
+plt.xscale("log")
+plt.title(f"$M(P_0)$, {eos}")
+plt.xlabel("$P_0$")
+plt.plot(p0_vals, M_vals)
+plt.plot(p0_crit, M_crit, "ro")
+plt.savefig(f"./p0_analysis,polytrope.pdf", bbox_inches = "tight")
+
