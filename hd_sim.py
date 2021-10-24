@@ -5,15 +5,15 @@
 # jitted code; the evolution function, in this file is jitted for much more speed than before
 
 #%%
-from hd_params import *
+from hd_params          import *
 
 from aux.hd_eos         import *
-from aux.hd_equations     import *
-from aux.hd_ic             import *
+from aux.hd_equations   import *
+from aux.hd_ic          import *
 from aux.hd_ops         import *
 from aux.hd_riemann     import *
-from aux.hd_write         import *
-from aux.hd_evolution     import *
+from aux.hd_write       import *
+from aux.hd_evolution   import *
 
 
 NUM_STORED = T_STEPS_ARRAY

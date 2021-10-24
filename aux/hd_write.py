@@ -44,14 +44,14 @@ def params_print():
 if record_data:
 
     # initialize output files
-    Pi_out         = open(f"{path}{output_number}-Pi.txt", "w")
+    Pi_out      = open(f"{path}{output_number}-Pi.txt", "w")
     Phi_out     = open(f"{path}{output_number}-Phi.txt", "w")
-    P_out         = open(f"{path}{output_number}-P.txt", "w")
+    P_out       = open(f"{path}{output_number}-P.txt", "w")
     rho_out     = open(f"{path}{output_number}-rho.txt", "w")
-    v_out         = open(f"{path}{output_number}-v.txt", "w")
+    v_out       = open(f"{path}{output_number}-v.txt", "w")
 
-    alpha_out     = open(f"{path}{output_number}-alpha.txt", "w")
-    a_out         = open(f"{path}{output_number}-a.txt", "w")
+    alpha_out   = open(f"{path}{output_number}-alpha.txt", "w")
+    a_out       = open(f"{path}{output_number}-a.txt", "w")
 
     files = [
         Pi_out,

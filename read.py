@@ -26,14 +26,14 @@ fft_xmax = 1e0
 t = 0
 
 f_Pi    = 0
-f_Phi    = 0
+f_Phi   = 0
 
 f_P     = 0
-f_rho    = 1
-f_v        = 0
+f_rho   = 1
+f_v     = 0
 
 f_alpha = 0
-f_a        = 0
+f_a     = 0
 
 
 # ========== READING IN FILES, PARAMETERS

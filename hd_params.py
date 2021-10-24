@@ -26,8 +26,8 @@ if int_rk3:             int_method = "RK3"
 
 # ========== EQUATION OF STATE
 
-darkmatter     = False 
-charge        = False
+darkmatter = False 
+charge     = False
 
 eos_UR = 0
 eos_polytrope = 0

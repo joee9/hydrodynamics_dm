@@ -22,9 +22,8 @@ def calculate_kval(h, ku, ka, alpha, a, u, F1, F2, rhos):
         a_p1h = (a[i] + a[i+1])/2
         a_m1h = (a[i] + a[i-1])/2
         if i>NUM_VPOINTS:
-            ku[i,:]         = h * du_dt(i, rhos[i], u[i,:], a_, a_p1h, a_m1h, \
-                alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
-            ka[i]             = h * fa(i, alpha_, a_, u[i,:])
+            ku[i,:] = h * du_dt(i, rhos[i], u[i,:], a_, a_p1h, a_m1h, alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
+            ka[i]   = h * fa(i, alpha_, a_, u[i,:])
 
 
 @njit
@@ -89,12 +88,12 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
 
-    k1a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
+    k1a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
 
     i = NUM_SPOINTS-1
     r_p1h = R(i+1/2)
 
-    k1a[i]             = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
+    k1a[i] = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
 
     # construct shifted arrays
     ak1 = a[curr,:]+k1a
@@ -142,12 +141,12 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
 
-    k2a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
+    k2a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
     
     i = NUM_SPOINTS-1
     r_p1h = R(i+1/2)
 
-    k2a[i]             = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
+    k2a[i] = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
 
     # compute shifted arrays
     ak12 = a[curr,:]+(k1a + k2a)/4
@@ -176,12 +175,12 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
 
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
-    k3a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak12[i], uk12[i,:])
+    k3a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak12[i], uk12[i,:])
 
     i = NUM_SPOINTS-1
     r_p1h = R(i+1/2)
 
-    k3a[i]             = h * fa(i, 1/ak12[i], ak12[i], uk12[i,:])
+    k3a[i] = h * fa(i, 1/ak12[i], ak12[i], uk12[i,:])
 
     # calculate a values across the entire array
     for i in range(NUM_VPOINTS+1,NUM_SPOINTS):
@@ -302,12 +301,12 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
 
-    k1a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
+    k1a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
 
     i = NUM_SPOINTS-1
     r_p1h = R(i+1/2)
 
-    k1a[i]             = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
+    k1a[i] = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
 
     # construct shifted arrays
     ak1 = a[curr,:]+k1a
@@ -355,12 +354,12 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
 
-    k2a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
+    k2a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
     
     i = NUM_SPOINTS-1
     r_p1h = R(i+1/2)
 
-    k2a[i]             = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
+    k2a[i] = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
 
     # compute shifted arrays
     # ak12 = a[curr,:]+(k1a + k2a)/4
