@@ -115,9 +115,7 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
         F1k1[i,:], F2k1[i,:] = findFluxes(i, uLk1[i,:], uRk1[i,:], rhos[i], rhos[i-1], rhos[i+1])
 
     # calculate k2
-    # calculate_rk3_kval(h, k2u, k2a, k2phi1, k2phi2, k2z, k2Omega, k2A_r, alpha[curr,:], ak1, uk1, F1k1, F2k1, phi1k1, phi2k1, zk1, Omegak1, A_rk1, rhos)
     calculate_kval(h, k2u, k2a, alpha[curr,:], ak1, uk1, F1k1, F2k1, rhos)
-    # calculate_rk3_kval(h, k1u, k1a, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
 
     uk12 = u+(k1u + k2u)/4
     # floor the updated u values
@@ -168,10 +166,7 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
         F1k12[i,:], F2k12[i,:] = findFluxes(i, uLk12[i,:], uRk12[i,:], rhos[i], rhos[i-1], rhos[i+1])
         
 
-    # calculate_rk3_kval(h, k3u, k3a, k3phi1, k3phi2, k3z, k3Omega, k3A_r, alpha[curr,:], ak12, uk12, F1k12, F2k12, phi1k12, phi2k12, zk12, Omegak12, A_rk12, rhos)
     calculate_kval(h, k3u, k3a, alpha[curr,:], ak12, uk12, F1k12, F2k12, rhos)
-    # calculate_rk3_kval(h, k2u, k2a, alpha[curr,:], ak1, uk1, F1k1, F2k1, rhos)
-
 
     i = NUM_SPOINTS-2
     r_p1h = R(i+1/2)
@@ -328,27 +323,7 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
         F1k1[i,:], F2k1[i,:] = findFluxes(i, uLk1[i,:], uRk1[i,:], rhos[i], rhos[i-1], rhos[i+1])
 
     # calculate k2
-    # calculate_rk3_kval(h, k2u, k2a, k2phi1, k2phi2, k2z, k2Omega, k2A_r, alpha[curr,:], ak1, uk1, F1k1, F2k1, phi1k1, phi2k1, zk1, Omegak1, A_rk1, rhos)
     calculate_kval(h, k2u, k2a, alpha[curr,:], ak1, uk1, F1k1, F2k1, rhos)
-    # calculate_rk3_kval(h, k1u, k1a, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
-
-    # uk12 = u+(k1u + k2u)/4
-    # # floor the updated u values
-    # checkFloor(uk12[:,Pi_i])
-    # checkFloor(uk12[:,Phi_i])
-
-    # # inner boundary for updated u values
-    # Phi2 = uk12[2,Pi_i]
-    # Phi3 = uk12[3,Phi_i]
-    # r2 = R(2)
-    # r3 = R(3)
-    # uk12[1,Pi_i] = (Phi2*r3**2 - Phi3*r2**2)/(r3**2 - r2**2) # see eq. (78)
-    # uk12[1,Phi_i] = (Phi2*r3**2 - Phi3*r2**2)/(r3**2 - r2**2) # see eq. (78)
-    # initializeEvenVPs(uk12)
-
-    # # outer boundary for updated u values
-    # uk12[NUM_SPOINTS-1] = uk12[NUM_SPOINTS-3]
-    # uk12[NUM_SPOINTS-2] = uk12[NUM_SPOINTS-3]
 
     # k2 vals for outer points: a, scalar fields
     i = NUM_SPOINTS-2
@@ -360,40 +335,6 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     r_p1h = R(i+1/2)
 
     k2a[i] = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
-
-    # compute shifted arrays
-    # ak12 = a[curr,:]+(k1a + k2a)/4
-
-    # ak12[NUM_VPOINTS] = 1
-
-    # # initialize all virtual points
-    # initializeEvenVPs(ak12)
-
-    # uLk12 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
-    # uRk12 = np.zeros((NUM_SPOINTS,2))         # u as calculated at C.B. using the right values
-    # cell_reconstruction(uk12,uLk12,uRk12)
-
-    # F1k12 = np.zeros((NUM_SPOINTS,2))
-    # F2k12 = np.zeros((NUM_SPOINTS,2))
-
-    # # calculate all fluxes
-    # for i in range(NUM_VPOINTS, NUM_SPOINTS-2): # needed at NUM_VPOINTS to calculate du_dt at i = NUM_VPOINTS+1
-    #     F1k12[i,:], F2k12[i,:] = findFluxes(i, uLk12[i,:], uRk12[i,:], rhos[i], rhos[i-1], rhos[i+1])
-        
-
-    # # calculate_rk3_kval(h, k3u, k3a, k3phi1, k3phi2, k3z, k3Omega, k3A_r, alpha[curr,:], ak12, uk12, F1k12, F2k12, phi1k12, phi2k12, zk12, Omegak12, A_rk12, rhos)
-    # calculate_kval(h, k3u, k3a, alpha[curr,:], ak12, uk12, F1k12, F2k12, rhos)
-    # # calculate_rk3_kval(h, k2u, k2a, alpha[curr,:], ak1, uk1, F1k1, F2k1, rhos)
-
-
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-    # k3a[i]             = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak12[i], uk12[i,:])
-
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k3a[i]             = h * fa(i, 1/ak12[i], ak12[i], uk12[i,:])
 
     # calculate a values across the entire array
     for i in range(NUM_VPOINTS+1,NUM_SPOINTS):
