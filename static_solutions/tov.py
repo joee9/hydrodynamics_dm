@@ -135,6 +135,8 @@ if make_static_solution:
 	
 	P_out.close()
 	rho_out.close()
+
+	print(f"COMPLETED.")
 		
 
 
