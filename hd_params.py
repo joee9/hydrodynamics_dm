@@ -26,8 +26,8 @@ if int_rk3:             int_method = "RK3"
 
 # ========== EQUATION OF STATE
 
-darkmatter 	= False 
-charge		= False
+darkmatter     = False 
+charge        = False
 
 eos_UR = 0
 eos_polytrope = 0
@@ -60,16 +60,16 @@ PRIM_IC_TOV = 1
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
     # gives a gaussian for rho, then used for finding P
-    A = 1E-5 	# amplitude
-    r0 = 5		# center
-    d = 2		# exponential argument scale
+    A = 1E-5     # amplitude
+    r0 = 5        # center
+    d = 2        # exponential argument scale
     PRIM_IC = "Gaussian"
 
 if PRIM_IC_TOV:
     if eos_polytrope:
-        PRIM_IC = "TOV solution polytrope"	# from Ben
+        PRIM_IC = "TOV solution polytrope"    # from Ben
     elif eos_SLy:
-        PRIM_IC = "TOV solution SLy"			# from Ben
+        PRIM_IC = "TOV solution SLy"            # from Ben
 
 
 # ========== GRID PARAMETERS

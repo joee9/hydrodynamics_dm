@@ -15,14 +15,14 @@ eos_polytrope = 0
 eos_SLy = 1
 
 if eos_UR:
-	eos = "UR"
-	Gamma = 1.3
+    eos = "UR"
+    Gamma = 1.3
 if eos_polytrope:
-	eos = "polytrope"
-	Gamma = 2
-	K = 100
+    eos = "polytrope"
+    Gamma = 2
+    K = 100
 if eos_SLy:
-	eos = "SLy"
+    eos = "SLy"
 
 # MODES
 make_static_solution = 0
@@ -31,14 +31,14 @@ p0_analysis = 1
 # PARAMETERS
 
 if make_static_solution:
-	p0 = 1e-5
+    p0 = 1e-5
 
 if p0_analysis:
-	pmin = 1e-6
-	pmax = 1e-1
-	NUM_POINTS = 1000
-	# p0_vals = np.arange(1e-6, 1e-1,5e-5)
-	p0_vals = np.logspace(round(np.log10(pmin)),round(np.log10(pmax)),NUM_POINTS, base=10.0)
+    pmin = 1e-6
+    pmax = 1e-1
+    NUM_POINTS = 1000
+    # p0_vals = np.arange(1e-6, 1e-1,5e-5)
+    p0_vals = np.logspace(round(np.log10(pmin)),round(np.log10(pmax)),NUM_POINTS, base=10.0)
 
 r0 = 0.000001
 rmax = 200
@@ -56,114 +56,114 @@ elif p0_analysis: path = "./p0_analysis"
 # FUNCTIONS
 
 if eos_SLy:
-	df = pd.read_csv("0-SLy_vals.vals")
-	SLy_rhos = df.iloc[:,0].to_numpy()
-	SLy_ps = df.iloc[:,1].to_numpy()
+    df = pd.read_csv("0-SLy_vals.vals")
+    SLy_rhos = df.iloc[:,0].to_numpy()
+    SLy_ps = df.iloc[:,1].to_numpy()
 
 
 rho_from_P_SLy = interp1d(SLy_ps, SLy_rhos)
 
 def rho_from_P(p):
-	if eos_UR:
-		return p/(Gamma-1)
-	elif eos_polytrope:
-		return (p/K)**(1/Gamma)
-	elif eos_SLy:
-		return rho_from_P_SLy(p)
+    if eos_UR:
+        return p/(Gamma-1)
+    elif eos_polytrope:
+        return (p/K)**(1/Gamma)
+    elif eos_SLy:
+        return rho_from_P_SLy(p)
 
 # def rho_from_P_UR(p):
-# 	return p/(Gamma-1)
+#     return p/(Gamma-1)
 
 # def rho_from_P_poly(p):
-# 	return (p/K)**(1/Gamma)
+#     return (p/K)**(1/Gamma)
 
 # rho_from_P_SLy = interp1d(SLy_ps, SLy_rhos)
-		
+        
 
 def event(r,y):
-	m, p = y
+    m, p = y
 
-	return p - p_tol
+    return p - p_tol
 
 event.terminal = True
 event.direction = 0
 
 def f_onefluid(r,y):
-	m, p = y
+    m, p = y
 
-	# if eos_UR:
-	# 	rho =  rho_from_P_UR(p)
-	# elif eos_polytrope:
-	# 	rho = rho_from_P_poly(p)
-	# elif eos_SLy:
-	# 	rho = rho_from_P_SLy(p)
+    # if eos_UR:
+    #     rho =  rho_from_P_UR(p)
+    # elif eos_polytrope:
+    #     rho = rho_from_P_poly(p)
+    # elif eos_SLy:
+    #     rho = rho_from_P_SLy(p)
 
-	rho = rho_from_P(p)
+    rho = rho_from_P(p)
 
-	N = 1-2*m/r
+    N = 1-2*m/r
 
-	fm = 4*np.pi*r**2*rho
-	frho = (-(4*np.pi*r**3*p + m)*(rho+p)/(r**2*N))
+    fm = 4*np.pi*r**2*rho
+    frho = (-(4*np.pi*r**3*p + m)*(rho+p)/(r**2*N))
 
-	return fm, frho
+    return fm, frho
 
 # ONE STATIC SOLUTIION
 
 if make_static_solution:
-	if eos_polytrope:
-		P_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_P.txt"
-		rho_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_rho.txt"
+    if eos_polytrope:
+        P_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_P.txt"
+        rho_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_rho.txt"
 
-	if eos_SLy:
-		P_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_P.txt"
-		rho_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_rho.txt"
+    if eos_SLy:
+        P_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_P.txt"
+        rho_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_rho.txt"
 
-	P_out = open(P_path,"w")
-	rho_out = open(rho_path,"w")
+    P_out = open(P_path,"w")
+    rho_out = open(rho_path,"w")
 
-	sol = solve_ivp(f_onefluid,[r0,rmax], [m0,p0], method='RK45', atol = 1e-12, rtol = 1e-12, t_eval=r_vals, events=event)
+    sol = solve_ivp(f_onefluid,[r0,rmax], [m0,p0], method='RK45', atol = 1e-12, rtol = 1e-12, t_eval=r_vals, events=event)
 
-	m, p = sol.y
+    m, p = sol.y
 
-	for i in range(len(r_vals)):
-		if i < len(p):
-			P_out.write(f"{p[i]:.16e}\n")
-			rho_out.write(f"{rho_from_P(p[i]):.16e}\n")
-		else:
-			P_out.write(f"{0:.16e}\n")
-			rho_out.write(f"{0:.16e}\n")
-	
-	P_out.close()
-	rho_out.close()
+    for i in range(len(r_vals)):
+        if i < len(p):
+            P_out.write(f"{p[i]:.16e}\n")
+            rho_out.write(f"{rho_from_P(p[i]):.16e}\n")
+        else:
+            P_out.write(f"{0:.16e}\n")
+            rho_out.write(f"{0:.16e}\n")
+    
+    P_out.close()
+    rho_out.close()
 
-	print(f"COMPLETED.")
-		
-
+    print(f"COMPLETED.")
+        
+    
 
 # P0 ANALYSIS
 
 if p0_analysis:
-	output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt","w")
+    output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt","w")
 
-	print(f"Number of points:{len(p0_vals)}")
+    print(f"Number of points:{len(p0_vals)}")
 
-	def evolution(p0_vals):
-		for i in range(len(p0_vals)):
-			
-			p0 = p0_vals[i]
-			sol = solve_ivp(f_onefluid,[r0,rmax], [m0,p0], method='RK45', atol = 1e-12, rtol = 1e-12, t_eval=r_vals, events=event)
-			M = sol.y[0][-1]
-			R = sol.t[-1]
+    def evolution(p0_vals):
+        for i in range(len(p0_vals)):
+            
+            p0 = p0_vals[i]
+            sol = solve_ivp(f_onefluid,[r0,rmax], [m0,p0], method='RK45', atol = 1e-12, rtol = 1e-12, t_eval=r_vals, events=event)
+            M = sol.y[0][-1]
+            R = sol.t[-1]
 
-			if M < 0: print(f"M <0"); break
+            if M < 0: print(f"M <0"); break
 
-			output.write(f"{p0:.6e},{M:.6e},{R:.6e}\n")
+            output.write(f"{p0:.6e},{M:.6e},{R:.6e}\n")
 
-			if i % 10 == 0: print(f"Timestep {i:3d} reached, {M=}.")
+            if i % 10 == 0: print(f"Timestep {i:3d} reached, {M=}.")
 
-	evolution(p0_vals)
+    evolution(p0_vals)
 
-	output.close()
+    output.close()
 
 #%%
 # from aux.hd_eos import P 
@@ -171,8 +171,8 @@ if p0_analysis:
 # rhos = np.logspace(-14,0,14000,base=10.0)
 
 # with open("./static_solutions/0-SLy_vals.vals", "w") as f:
-# 	for i in range(len(rhos)):
-# 		f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
+#     for i in range(len(rhos)):
+#         f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
 
 # If this is needed, make sure to use the function P from aux.hd_eos;
 # make sure this file is in the home directory, and that
