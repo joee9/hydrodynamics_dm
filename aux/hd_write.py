@@ -32,6 +32,8 @@ def params_print():
             f.write(f"    Gamma         = {Gamma}\n")
         f.write(f"\n")
         f.write(f"Primitive IC      = {PRIM_IC}\n")
+        if PRIM_IC_TOV:
+            f.write(f"    p0            = {p_val}")
         # f.write(f"Scalar Field IC = {SF_IC}\n")
 
         # TODO: add print statments that print out the number of tsteps, rsteps, etc. that are actually saved to file

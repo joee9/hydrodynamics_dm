@@ -17,8 +17,8 @@ dim = "ringdown"
 
 # fft parameters
 FFT = 0
-FFT_spikes = 0     # reads in frequencies from the file path/freqs.txt for plotting
-fft_xmin = 1e-2
+FFT_spikes = 1     # reads in frequencies from the file path/freqs.txt for plotting
+fft_xmin = .5e-1
 fft_xmax = 1e0
 
 # for "s", this is the time snapshot.
