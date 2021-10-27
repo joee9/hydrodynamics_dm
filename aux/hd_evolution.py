@@ -248,16 +248,7 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     initializeEvenVPs(prim[next,:,P_i])
     initializeEvenVPs(prim[next,:,rho_i])
 
-    # ========== CALCULATE ALPHA ========== #
-
-    # # # calculate alpha at each cell boundary, storing it at the gridpoint to its left
-
-    # alpha[next,NUM_SPOINTS-1] = (1/2 * (a[next,NUM_SPOINTS-1] + a[next,NUM_SPOINTS-2]))**(-1) # average of last two a values
-    # for i in range(NUM_SPOINTS-1, NUM_VPOINTS, -1): # start at last boundary and move inwards
-
-    #     alpha[next,i-1] = falpha(alpha[next,i], R(i), cons[next,i,:], prim[next,i,:], a[next,i])
-
-    # initializeEvenVPs(alpha[next,:], spacing="staggered")
+    # ========== CALCULATE GRAVITY FUNCTIONS ========== #
 
     calc_gravity_functions(a[next,:], alpha[next,:], cons[next,:,:], prim[next,:,:])
 

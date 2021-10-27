@@ -12,14 +12,14 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 3
+output_number = 4
 
 path = "data/"
 
 # ========== NUMERICAL INTEGRATION METHOD
 
-int_modified_euler = 1
-int_rk3 = 0
+int_modified_euler = 0
+int_rk3 = 1
 
 if int_modified_euler:  int_method = "modified euler"
 if int_rk3:             int_method = "RK3"
@@ -110,7 +110,7 @@ PRINT_INTERVAL = 25
 
 # ========== MISC OTHER PARAMETERS
 
-floor = 1E-12
+floor = 1E-15
 
 # Newton Rhapson rootfinding parameters
 NR_MAX_ITERATIONS = 50

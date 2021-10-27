@@ -9,7 +9,7 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 1
+output_number = 4
 save_fig = 0
 
 # dim = "s"

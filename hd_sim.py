@@ -1,6 +1,6 @@
 # Joe Nyhan, 30 June 2021
 # The simulation of a neutron star.
-#     auxillary files: aux_dm folder
+#     auxillary files: aux folder
 
 # jitted code; the evolution function, in this file is jitted for much more speed than before
 
@@ -38,8 +38,8 @@ prim[0,:,rho_i] = initial_rho_vals
 prim[0,:,v_i] = np.zeros(NUM_SPOINTS) # velocity initialized to zero
 
 # implement a floor on primitives
-prim[0,:,P_i] += 1E-13
-prim[0,:,rho_i] += 1E-13
+prim[0,:,P_i] += 1E-15
+prim[0,:,rho_i] += 1E-15
 
 # conservative data
 for i in range(NUM_SPOINTS): 
