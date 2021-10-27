@@ -100,12 +100,12 @@ def theta(u, r, alpha, a, rho0):
 
 # initial a
 @njit
-def fa0(r, a, cons):
+def fa0(r, a, u):
 
     if r == 0:
         return 0
     else:
-        Pi, Phi = cons
+        Pi, Phi = u 
         return 4 * np.pi * r * a**3 * (Pi + Phi) / 2 - a * (a**2 - 1) / (2 * r)
 
 # time evolution of a

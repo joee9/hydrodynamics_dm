@@ -12,7 +12,7 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 2
+output_number = 3
 
 path = "data/"
 
@@ -30,8 +30,8 @@ darkmatter = False
 charge     = False
 
 eos_UR = 0
-eos_polytrope = 0
-eos_SLy = 1
+eos_polytrope = 1
+eos_SLy = 0
 
 
 if eos_UR:          eos = "ultra relativistic"

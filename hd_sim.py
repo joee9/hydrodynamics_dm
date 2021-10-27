@@ -53,31 +53,32 @@ checkFloor(cons[0,:,Pi_i])
 checkFloor(cons[0,:,Phi_i])
 
 # construct gravity equations at n = 0
+calc_gravity_functions(a[0,:], alpha[0,:], cons[0,:,:], prim[0,:,:])
 
-# calculate a across the spatial points at t = 0
+# # calculate a across the spatial points at t = 0
 
-a[0,NUM_VPOINTS] = 1
-h = dr
+# a[0,NUM_VPOINTS] = 1
+# h = dr
 
-for i in range(NUM_VPOINTS,NUM_SPOINTS-1):
-    r_ = R(i)
-    a_ = a[0,i]
+# for i in range(NUM_VPOINTS,NUM_SPOINTS-1):
+#     r_ = R(i)
+#     a_ = a[0,i]
 
-    u = cons[0,i,:]
-    u_p1 = cons[0,i+1,:]
-    u_p1h = (u+u_p1)/2
+#     u = cons[0,i,:]
+#     u_p1 = cons[0,i+1,:]
+#     u_p1h = (u+u_p1)/2
 
-    k1 = h * fa0(r_,a_,u)
-    k2 = h * fa0(r_ + h/2, a_ + k1/2, u_p1h)
+#     k1 = h * fa0(r_,a_,u)
+#     k2 = h * fa0(r_ + h/2, a_ + k1/2, u_p1h)
 
-    a[0,i+1] = a[0,i] + k2
+#     a[0,i+1] = a[0,i] + k2
 
 
-# calculate alpha at each cell boundary, storing it at the gridpoint to its left
-alpha[0,NUM_SPOINTS-1] = (1/2 * (a[0,NUM_SPOINTS-1] + a[0,NUM_SPOINTS-2]))**(-1) # average of last two a values
-for i in range(NUM_SPOINTS-1, NUM_VPOINTS, -1): # start at last boundary and move inwards
+# # calculate alpha at each cell boundary, storing it at the gridpoint to its left
+# alpha[0,NUM_SPOINTS-1] = (1/2 * (a[0,NUM_SPOINTS-1] + a[0,NUM_SPOINTS-2]))**(-1) # average of last two a values
+# for i in range(NUM_SPOINTS-1, NUM_VPOINTS, -1): # start at last boundary and move inwards
 
-    alpha[0,i-1] = falpha(alpha[0,i], R(i), cons[0,i,:], prim[0,i,:], a[0,i])
+#     alpha[0,i-1] = falpha(alpha[0,i], R(i), cons[0,i,:], prim[0,i,:], a[0,i])
 
 # initialize all virtual points
 initializeEvenVPs(prim[0,:,Pi_i])
