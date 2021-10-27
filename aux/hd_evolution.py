@@ -48,7 +48,6 @@ def calculate_kval(h, ku, alpha, a, u, F1, F2, rhos):
         a_m1h = (a[i] + a[i-1])/2
         if i>NUM_VPOINTS:
             ku[i,:] = h * du_dt(i, rhos[i], u[i,:], a_, a_p1h, a_m1h, alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
-            # ka[i]   = h * fa(i, alpha_, a_, u[i,:])
 
 
 @njit
@@ -82,10 +81,6 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     k2u = np.zeros((NUM_SPOINTS,2))
     k3u = np.zeros((NUM_SPOINTS,2))
 
-    # k1a = np.zeros(NUM_SPOINTS)  
-    # k2a = np.zeros(NUM_SPOINTS)
-    # k3a = np.zeros(NUM_SPOINTS)
-
     # calculate k1
     calculate_kval(h, k1u, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
 
@@ -107,24 +102,6 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     # outer boundary for updated u values
     uk1[NUM_SPOINTS-1] = uk1[NUM_SPOINTS-3]
     uk1[NUM_SPOINTS-2] = uk1[NUM_SPOINTS-3]
-
-    # # calculate outer k1 for outer points
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-
-    # k1a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
-
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k1a[i] = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
-
-    # # construct shifted arrays
-    # ak1 = a[curr,:]+k1a
-    # ak1[NUM_VPOINTS] = 1
-
-    # # initialize all virtual points
-    # initializeEvenVPs(ak1)
 
     # cell reconstruction
     uLk1 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
@@ -159,25 +136,6 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     uk12[NUM_SPOINTS-1] = uk12[NUM_SPOINTS-3]
     uk12[NUM_SPOINTS-2] = uk12[NUM_SPOINTS-3]
 
-    # k2 vals for outer points: a, scalar fields
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-
-    # k2a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
-    
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k2a[i] = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
-
-    # # compute shifted arrays
-    # ak12 = a[curr,:]+(k1a + k2a)/4
-
-    # ak12[NUM_VPOINTS] = 1
-
-    # # initialize all virtual points
-    # initializeEvenVPs(ak12)
-
     uLk12 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
     uRk12 = np.zeros((NUM_SPOINTS,2))         # u as calculated at C.B. using the right values
     cell_reconstruction(uk12,uLk12,uRk12)
@@ -192,22 +150,6 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
 
     #calc k3
     calculate_kval(h, k3u, alpha[curr,:], a[curr,:], uk12, F1k12, F2k12, rhos)
-
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-    # k3a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak12[i], uk12[i,:])
-
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k3a[i] = h * fa(i, 1/ak12[i], ak12[i], uk12[i,:])
-
-    # # calculate a values across the entire array
-    # for i in range(NUM_VPOINTS+1,NUM_SPOINTS):
-    #     a[next,i] = a[curr,i] + 1/6 * (k1a[i] + k2a[i] + 4*k3a[i])
-    
-    # a[next,NUM_VPOINTS] = 1
-    # initializeEvenVPs(a[next,:])
 
     # conservative functions
     for i in range(NUM_VPOINTS+1,NUM_SPOINTS-2):
@@ -283,10 +225,6 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     k2u = np.zeros((NUM_SPOINTS,2))
     k3u = np.zeros((NUM_SPOINTS,2))
 
-    # k1a = np.zeros(NUM_SPOINTS)  
-    # k2a = np.zeros(NUM_SPOINTS)
-    # k3a = np.zeros(NUM_SPOINTS)
-
     # calculate k1
     calculate_kval(h, k1u, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
 
@@ -309,23 +247,6 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     uk1[NUM_SPOINTS-1] = uk1[NUM_SPOINTS-3]
     uk1[NUM_SPOINTS-2] = uk1[NUM_SPOINTS-3]
 
-    # calculate outer k1 for outer points
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-
-    # k1a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, a[curr,i], u[i,:])
-
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k1a[i] = h * fa(i, 1/a[curr,i], a[curr,i], u[i,:])
-
-    # # construct shifted arrays
-    # ak1 = a[curr,:]+k1a
-    # ak1[NUM_VPOINTS] = 1
-
-    # # initialize all virtual points
-    # initializeEvenVPs(ak1)
 
     # cell reconstruction
     uLk1 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
@@ -342,23 +263,6 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     # calculate k2
     calculate_kval(h, k2u, alpha[curr,:], a[curr,:], uk1, F1k1, F2k1, rhos)
 
-    # k2 vals for outer points: a, scalar fields
-    # i = NUM_SPOINTS-2
-    # r_p1h = R(i+1/2)
-
-    # k2a[i] = h * fa(i, (alpha[curr,i]+alpha[curr,i-1])/2, ak1[i], uk1[i,:])
-    
-    # i = NUM_SPOINTS-1
-    # r_p1h = R(i+1/2)
-
-    # k2a[i] = h * fa(i, 1/ak1[i], ak1[i], uk1[i,:])
-
-    # # calculate a values across the entire array
-    # for i in range(NUM_VPOINTS+1,NUM_SPOINTS):
-    #     a[next,i] = a[curr,i] + 1/2 * (k1a[i] + k2a[i])
-    
-    # a[next,NUM_VPOINTS] = 1
-    # initializeEvenVPs(a[next,:])
 
     # conservative functions
     for i in range(NUM_VPOINTS+1,NUM_SPOINTS-2):
@@ -399,15 +303,6 @@ def evolution_modified_euler(cons,prim,a,alpha,curr,next):
     initializeEvenVPs(prim[next,:,P_i])
     initializeEvenVPs(prim[next,:,rho_i])
 
-    # ========== CALCULATE ALPHA ========== #
+    # ========== CALCULATE GRAVITY FUNCTIONS ========== #
 
-    # # calculate alpha at each cell boundary, storing it at the gridpoint to its left
-
-    # alpha[next,NUM_SPOINTS-1] = (1/2 * (a[next,NUM_SPOINTS-1] + a[next,NUM_SPOINTS-2]))**(-1) # average of last two a values
-    # for i in range(NUM_SPOINTS-1, NUM_VPOINTS, -1): # start at last boundary and move inwards
-
-    #     alpha[next,i-1] = falpha(alpha[next,i], R(i), cons[next,i,:], prim[next,i,:], a[next,i])
-
-    # initializeEvenVPs(alpha[next,:], spacing="staggered")
-    
     calc_gravity_functions(a[next,:], alpha[next,:], cons[next,:,:], prim[next,:,:])
