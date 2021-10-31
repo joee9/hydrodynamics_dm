@@ -3,6 +3,7 @@
 
 # globally used packages
 import sys
+import os
 import numpy as np; np.set_printoptions(threshold=sys.maxsize)
 from numba import njit
 from time import process_time
@@ -13,6 +14,8 @@ from time import process_time
 record_data = 1
 record_ringdown = 1
 output_number = 5
+
+continue_run = 0
 
 path = "data/"
 

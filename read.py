@@ -10,7 +10,7 @@ from scipy.fft import fft,fftshift
 #%%
 
 output_number = 5
-save_fig = 1
+save_fig = 0
 
 # dim = "s"
 dim = "ringdown"

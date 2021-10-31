@@ -8,7 +8,10 @@ from aux.hd_equations import R
 
 # initialization functions
 def params_print():
-    with open(f"{path}{output_number}-0params.txt", "w") as f:
+    s = ""
+    if continue_run: s = "2"
+
+    with open(f"{path}{output_number}-0params{s}.txt", "w") as f:
         # commonly checked parameters
         f.write(f"Write interval    = {RECORD_INTERVAL}\n")
         f.write(f"Ring interval     = {RING_INTERVAL}\n")
@@ -40,20 +43,59 @@ def params_print():
 
         # TODO: print out initial conditions for dark matter configuration
 
+def verify_continue_run():
+    os.system(f"diff {path}{output_number}-0params.txt {path}{output_number}-0params2.txt > {path}diff.txt")
 
+    num_lines = 0
+    with open(f"{path}diff.txt") as diff:
+        while diff.readline() != "": num_lines += 1
+
+    if num_lines != 4:
+        print("Runs are different; cannot continue.")
+        exit()
+    
+    with open(f"{path}diff.txt") as diff:
+        diff.readline()
+        old_time = diff.readline()
+        diff.readline()
+        new_time = diff.readline()
+
+        old_time = int(old_time.replace("< tmax              = ", ""))
+        new_time = int(new_time.replace("> tmax              = ", ""))
+
+        if not old_time - new_time > 0:
+            print("Invalid new time.")
+            exit()
+        
+    os.system(f"cp {path}{output_number}-0params2.txt {path}{output_number}-0params.txt")
+    os.system(f"rm {path}{output_number}-0params2.txt")
+    os.system(f"rm diff.txt")
+
+
+
+if record_data or record_ringdown:
+    # print out all parameters
+    params_print()
+
+
+# sets things up for continuing an already started run
+mode = "w"
+if continue_run: 
+    mode = "a" # appends to file
+    verify_continue_run()
 
 # actual printing
 if record_data:
 
     # initialize output files
-    Pi_out      = open(f"{path}{output_number}-Pi.txt", "w")
-    Phi_out     = open(f"{path}{output_number}-Phi.txt", "w")
-    P_out       = open(f"{path}{output_number}-P.txt", "w")
-    rho_out     = open(f"{path}{output_number}-rho.txt", "w")
-    v_out       = open(f"{path}{output_number}-v.txt", "w")
+    Pi_out      = open(f"{path}{output_number}-Pi.txt", mode)
+    Phi_out     = open(f"{path}{output_number}-Phi.txt", mode)
+    P_out       = open(f"{path}{output_number}-P.txt", mode)
+    rho_out     = open(f"{path}{output_number}-rho.txt", mode)
+    v_out       = open(f"{path}{output_number}-v.txt", mode)
 
-    alpha_out   = open(f"{path}{output_number}-alpha.txt", "w")
-    a_out       = open(f"{path}{output_number}-a.txt", "w")
+    alpha_out   = open(f"{path}{output_number}-alpha.txt", mode)
+    a_out       = open(f"{path}{output_number}-a.txt", mode)
 
     files = [
         Pi_out,
@@ -68,7 +110,7 @@ if record_data:
     ]
 
     # write all r values that correspond to spatial values in other files
-    rs_out = open(f"{path}{output_number}-r.txt", "w")
+    rs_out = open(f"{path}{output_number}-r.txt", mode)
 
     # for i in range(int(rmin/dr), int(rmax/dr), R_STEP_FILE):
     for i in range(NUM_SPOINTS):
@@ -80,14 +122,11 @@ if record_data:
     rs_out.close()
 
     # file containing all t values
-    ts_out = open(f"{path}{output_number}-t.txt", "w")
+    ts_out = open(f"{path}{output_number}-t.txt", mode)
 
 if record_ringdown:
-    ringdown = open(f"{path}{output_number}-ringdown.txt", "w")
+    ringdown = open(f"{path}{output_number}-ringdown.txt", mode)
 
-if record_data or record_ringdown:
-    # print out all parameters
-    params_print()
 
 
 def output_write(array, n):
