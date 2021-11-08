@@ -34,7 +34,8 @@ charge     = False
 
 eos_UR = 0
 eos_polytrope = 0
-eos_SLy = 1
+eos_SLy = 0
+eos_FPS = 1
 
 
 if eos_UR:          eos = "ultra relativistic"
@@ -73,6 +74,8 @@ if PRIM_IC_TOV:
         PRIM_IC = "TOV solution polytrope"    # from Ben
     elif eos_SLy:
         PRIM_IC = "TOV solution SLy"            # from Ben
+    elif eos_FPS:
+        PRIM_IC = "TOV solution FPS"
 
 
 # ========== GRID PARAMETERS

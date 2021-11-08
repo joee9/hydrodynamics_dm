@@ -12,7 +12,8 @@ import matplotlib.pyplot as plt
 # EOS
 eos_UR = 0
 eos_polytrope = 0
-eos_SLy = 1
+eos_SLy = 0
+eos_FPS = 1
 
 if eos_UR:
     eos = "UR"
@@ -23,10 +24,12 @@ if eos_polytrope:
     K = 100
 if eos_SLy:
     eos = "SLy"
+if eos_FPS:
+    eos = "FPS"
 
 # MODES
-make_static_solution = 0
-p0_analysis = 1
+make_static_solution = 1
+p0_analysis = 0
 
 # PARAMETERS
 
@@ -55,21 +58,27 @@ elif p0_analysis: path = "./p0_analysis"
 
 # FUNCTIONS
 
-if eos_SLy:
-    df = pd.read_csv("0-SLy_vals.vals")
-    SLy_rhos = df.iloc[:,0].to_numpy()
-    SLy_ps = df.iloc[:,1].to_numpy()
+vals_path = ""
+if eos_UR or eos_polytrope:
+    pass
+else:
+    if eos_SLy: vals_path = "0-SLy_vals.vals"
+    elif eos_FPS: vals_path = "0-FPS_vals.vals"
+
+    df = pd.read_csv(vals_path)
+    interp_rhos = df.iloc[:,0].to_numpy()
+    interp_ps = df.iloc[:,1].to_numpy()
 
 
-rho_from_P_SLy = interp1d(SLy_ps, SLy_rhos)
+rho_from_P_interp = interp1d(interp_ps, interp_rhos)
 
 def rho_from_P(p):
     if eos_UR:
         return p/(Gamma-1)
     elif eos_polytrope:
         return (p/K)**(1/Gamma)
-    elif eos_SLy:
-        return rho_from_P_SLy(p)
+    else:
+        return rho_from_P_interp(p)
 
 # def rho_from_P_UR(p):
 #     return p/(Gamma-1)
@@ -114,9 +123,10 @@ if make_static_solution:
         P_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_P.txt"
         rho_path = f"{path}/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p0:.8f}_dr{dr:.3f}_rho.txt"
 
-    if eos_SLy:
-        P_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_P.txt"
-        rho_path = f"{path}/SLy_p{p0:.8f}_dr{dr:.3f}_rho.txt"
+    # if eos_SLy:
+    else:
+        P_path = f"{path}/{eos}_p{p0:.8f}_dr{dr:.3f}_P.txt"
+        rho_path = f"{path}/{eos}_p{p0:.8f}_dr{dr:.3f}_rho.txt"
 
     P_out = open(P_path,"w")
     rho_out = open(rho_path,"w")
@@ -167,10 +177,14 @@ if p0_analysis:
 
 #%%
 # from aux.hd_eos import P 
-# # make SLy file
+# # make SLy or FPS file
 # rhos = np.logspace(-14,0,14000,base=10.0)
 
-# with open("./static_solutions/0-SLy_vals.vals", "w") as f:
+# # with open("./static_solutions/0-SLy_vals.vals", "w") as f:
+# #     for i in range(len(rhos)):
+# #         f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
+
+# with open("./static_solutions/0-FPS_vals.vals", "w") as f:
 #     for i in range(len(rhos)):
 #         f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
 
