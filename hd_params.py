@@ -41,6 +41,7 @@ eos_FPS = 1
 if eos_UR:          eos = "ultra relativistic"
 if eos_polytrope:   eos = "polytrope"
 if eos_SLy:         eos = "SLy"
+if eos_FPS:         eos = "FPS"
 
 # initialize necessary parameters given an eos
 if eos_UR:
