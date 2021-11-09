@@ -15,3 +15,12 @@ Data recording can be toggled with the `record_data` flag. Currently, this recor
 ### I/O
 Make sure that the folders `input` and `data` are created such that the program can write correctly. Otherwise, and error will occur.
 *To be included in the future*: the static solutions will automatically be generated to the correct directory to be read by the main simulation code. Depending on the chosen initial conditions, the correct static solutions will be chosen.
+
+## Static Solutions
+All of the code for creating "static solutions" to be loaded into the temporal simulation is contained in the `./static_solutions` directory. Here, there are two main files of interest: `tov.py` and `makevals.py`.
+
+### makevals.py
+Use this file to tabulate values of $\rho$ and $P$ for use in `tov.py`. Set the EoS of choice within `hd_params.py` and run `python makevals.py` from within `./static_solutions`. A corresponding `.vals` file will be produced and placed within that directory to be read and dealt with by `tov.py`.
+
+### tov.py
+This file is run to create a static solution for a given equation of state. In order to use a given equation of state, however, we must have a way to get energy density, $\rho$, from $P$, pressure. This is the opposite of the way that it we implemented the EoSs in `aux/hd_eos.py`, so we instead tabulate values to be used within tov.py. This is what `makevals.py` is for.

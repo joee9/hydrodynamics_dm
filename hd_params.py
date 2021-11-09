@@ -7,7 +7,6 @@ import os
 import numpy as np; np.set_printoptions(threshold=sys.maxsize)
 from numba import njit
 from time import process_time
-# NUMBA_DISABLE_JIT = 1
 
 # for recording data
 
@@ -38,7 +37,7 @@ eos_SLy = 0
 eos_FPS = 1
 
 
-if eos_UR:          eos = "ultra relativistic"
+if eos_UR:          eos = "UR"
 if eos_polytrope:   eos = "polytrope"
 if eos_SLy:         eos = "SLy"
 if eos_FPS:         eos = "FPS"
@@ -129,10 +128,6 @@ NR_TOL = 1E-7
 mu = 1
 Lambda = 0
 G = 1
-# if charge:
-#   g = .65*np.sqrt(8*np.pi)
-# elif not charge:
-#   g = 1e-10
 
 # for indexing
 P_i = 0

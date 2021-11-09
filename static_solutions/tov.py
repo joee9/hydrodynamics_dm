@@ -62,8 +62,7 @@ vals_path = ""
 if eos_UR or eos_polytrope:
     pass
 else:
-    if eos_SLy: vals_path = "0-SLy_vals.vals"
-    elif eos_FPS: vals_path = "0-FPS_vals.vals"
+    vals_path = f"0-{eos}_vals.vals"
 
     df = pd.read_csv(vals_path)
     interp_rhos = df.iloc[:,0].to_numpy()
