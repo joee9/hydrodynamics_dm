@@ -9,7 +9,7 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 5
+output_number = 12
 save_fig = 0
 
 # dim = "s"
@@ -17,7 +17,7 @@ dim = "ringdown"
 
 # fft parameters
 FFT = 0
-FFT_spikes = 1     # reads in frequencies from the file path/freqs.txt for plotting
+FFT_spikes = 0     # reads in frequencies from the file path/freqs.txt for plotting
 fft_xmin = .5e-1
 fft_xmax = 1e0
 

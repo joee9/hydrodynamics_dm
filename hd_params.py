@@ -13,7 +13,7 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 5
+output_number = 12
 
 continue_run = 0
 
@@ -52,6 +52,9 @@ if eos_polytrope:
     Gamma = 2
 
 if eos_SLy:
+    pass
+
+if eos_FPS:
     pass
 
 # general parameters for TOV solutions

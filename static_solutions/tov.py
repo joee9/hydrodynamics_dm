@@ -34,7 +34,7 @@ p0_analysis = 0
 # PARAMETERS
 
 if make_static_solution:
-    p0 = 1e-5
+    p0 = 1e-4
 
 if p0_analysis:
     pmin = 1e-6
