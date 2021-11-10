@@ -37,19 +37,13 @@ if PRIM_IC == "TOV solution polytrope":
     initial_rho_vals = getvals(rho_file)
     initial_p_vals = getvals(p_file)
 
-if PRIM_IC == "TOV solution SLy":
-    rho_file = f"input/SLy_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
-    p_file = f"input/SLy_p{p_val:.8f}_dr{dr:.3f}_P.txt"
+if PRIM_IC == "TOV solution fit":
+    rho_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
+    p_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
 
     initial_rho_vals = getvals(rho_file)
     initial_p_vals = getvals(p_file)
 
-if PRIM_IC == "TOV solution FPS":
-    rho_file = f"input/FPS_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
-    p_file = f"input/FPS_p{p_val:.8f}_dr{dr:.3f}_P.txt"
-
-    initial_rho_vals = getvals(rho_file)
-    initial_p_vals = getvals(p_file)
 
 @njit
 def rho_gaussian(r):

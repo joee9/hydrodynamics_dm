@@ -1,5 +1,4 @@
 *.txt
-*.vals
 *.pyc
 *.swp
 plots/*

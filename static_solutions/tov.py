@@ -10,10 +10,15 @@ import matplotlib.pyplot as plt
 # %%
 
 # EOS
-eos_UR = 0
+eos_UR        = 0
 eos_polytrope = 0
-eos_SLy = 0
-eos_FPS = 1
+
+eos_SLy       = 0
+eos_FPS       = 0
+
+eos_BSk19     = 0
+eos_BSk20     = 0
+eos_BSk21     = 1
 
 if eos_UR:
     eos = "UR"
@@ -26,10 +31,16 @@ if eos_SLy:
     eos = "SLy"
 if eos_FPS:
     eos = "FPS"
+if eos_BSk19:
+    eos = "BSk19"
+if eos_BSk20:
+    eos = "BSk20"
+if eos_BSk21:
+    eos = "BSk21"
 
 # MODES
-make_static_solution = 1
-p0_analysis = 0
+make_static_solution = 0
+p0_analysis = 1
 
 # PARAMETERS
 
@@ -154,7 +165,7 @@ if make_static_solution:
 if p0_analysis:
     output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt","w")
 
-    print(f"Number of points:{len(p0_vals)}")
+    print(f"Number of points:{len(p0_vals)}; for EoS: {eos}")
 
     def evolution(p0_vals):
         for i in range(len(p0_vals)):

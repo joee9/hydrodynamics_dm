@@ -12,7 +12,7 @@ from time import process_time
 
 record_data = 1
 record_ringdown = 1
-output_number = 12
+output_number = 1   
 
 continue_run = 0
 
@@ -31,16 +31,27 @@ if int_rk3:             int_method = "RK3"
 darkmatter = False 
 charge     = False
 
-eos_UR = 0
+# different EOS
+eos_UR        = 0
 eos_polytrope = 0
-eos_SLy = 0
-eos_FPS = 1
+
+eos_SLy       = 0
+eos_FPS       = 0
+
+eos_BSk19     = 0
+eos_BSk20     = 0
+eos_BSk21     = 1
 
 
 if eos_UR:          eos = "UR"
 if eos_polytrope:   eos = "polytrope"
+
 if eos_SLy:         eos = "SLy"
 if eos_FPS:         eos = "FPS"
+
+if eos_BSk19:       eos = "BSk19"
+if eos_BSk20:       eos = "BSk20"
+if eos_BSk21:       eos = "BSk21"
 
 # initialize necessary parameters given an eos
 if eos_UR:
@@ -50,11 +61,6 @@ if eos_polytrope:
     K = 100
     Gamma = 2
 
-if eos_SLy:
-    pass
-
-if eos_FPS:
-    pass
 
 # general parameters for TOV solutions
 p_val = 1e-4
@@ -75,10 +81,8 @@ if  PRIM_IC_GAUSSIAN:
 if PRIM_IC_TOV:
     if eos_polytrope:
         PRIM_IC = "TOV solution polytrope"    # from Ben
-    elif eos_SLy:
-        PRIM_IC = "TOV solution SLy"            # from Ben
-    elif eos_FPS:
-        PRIM_IC = "TOV solution FPS"
+    else:
+        PRIM_IC = "TOV solution fit"            # from Ben
 
 
 # ========== GRID PARAMETERS

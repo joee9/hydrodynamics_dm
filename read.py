@@ -9,7 +9,7 @@ from scipy.fft import fft,fftshift
 
 #%%
 
-output_number = 12
+output_number = 1
 save_fig = 0
 
 # dim = "s"
@@ -225,7 +225,10 @@ from scipy.optimize import minimize, fmin
 path = "./static_solutions/p0_analysis"
 # eos = "polytrope"
 # eos = "SLy"
-eos = "FPS"
+# eos = "FPS"
+eos = "BSk19"
+# eos = "BSk20"
+# eos = "BSk21"
 
 pmin = 1e-6
 pmax = 1e-1
@@ -246,8 +249,8 @@ print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
 
 plt.xscale("log")
 plt.title(f"$M(P_0)$, {eos}")
-plt.text(1e-3,1,"$P_{crit} = $" + f"{p0_crit:.4e}")
-plt.text(1e-3,.8,"$M_{crit}$ = " + f"{M_crit:.4e}")
+plt.text(1e-3,.6,"$P_{crit} = $" + f"{p0_crit:.4e}")
+plt.text(1e-3,.5,"$M_{crit}$ = " + f"{M_crit:.4e}")
 
 plt.xlabel("$P_0$")
 plt.plot(p0_vals, M_vals)
