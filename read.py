@@ -222,11 +222,14 @@ from scipy.interpolate import interp1d
 from scipy.optimize import minimize, fmin
 # analyze M vs. P(0) analyses from tov
 
+M_vs_R = 1
+M_vs_p0 = 0
+
 path = "./static_solutions/p0_analysis"
 # eos = "polytrope"
 # eos = "SLy"
-# eos = "FPS"
-eos = "BSk19"
+eos = "FPS"
+# eos = "BSk19"
 # eos = "BSk20"
 # eos = "BSk21"
 
@@ -239,20 +242,48 @@ M_vals = df.iloc[:,1].to_numpy()
 R_vals = df.iloc[:,2].to_numpy()  
 p0_vals = df.iloc[:,0].to_numpy()
 
-crit_p0_guess = p0_vals[np.argmax(M_vals)]
+if M_vs_p0:
+    tag = "p0"
+    crit_p0_guess = p0_vals[np.argmax(M_vals)]
 
-p0_interp = interp1d(p0_vals,1/M_vals)
-p0_crit = fmin(p0_interp, crit_p0_guess)[0]
-M_crit = 1/(p0_interp(p0_crit))
+    p0_interp = interp1d(p0_vals,1/M_vals)
+    p0_crit = fmin(p0_interp, crit_p0_guess)[0]
+    M_crit = 1/(p0_interp(p0_crit))
 
-print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
+    plt.text(1e-3,.6,"$P_{crit} = $" + f"{p0_crit:.4e}")
+    plt.text(1e-3,.5,"$M_{crit}$ = " + f"{M_crit:.4e}")
+    plt.title(f"$M(P_0)$, {eos}")
+    plt.xlabel("$P_0$")
 
-plt.xscale("log")
-plt.title(f"$M(P_0)$, {eos}")
-plt.text(1e-3,.6,"$P_{crit} = $" + f"{p0_crit:.4e}")
-plt.text(1e-3,.5,"$M_{crit}$ = " + f"{M_crit:.4e}")
+    print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
 
-plt.xlabel("$P_0$")
-plt.plot(p0_vals, M_vals)
-plt.plot(p0_crit, M_crit, "ro")
-plt.savefig(f"./plots/p0_analysis,{eos}.pdf", bbox_inches = "tight")
+    h_axis = p0_vals
+    v_axis = M_vals
+    plt.plot(p0_crit, M_crit, "ro")
+    
+if M_vs_R:
+    tag = "r"
+    crit_R_guess = R_vals[np.argmax(M_vals)]
+
+    R_interp = interp1d(R_vals,1/M_vals)
+    R_crit = fmin(R_interp, crit_R_guess)[0]
+    M_crit = 1/(R_interp(R_crit))
+
+    R_crit *= 1.63161 # km
+    M_crit *= 2.4091  # solar masses
+
+    plt.text(10,2,"$R_{crit} = $" + f"{R_crit:.4e}")
+    plt.text(10,1.75,"$M_{crit}$ = " + f"{M_crit:.4e}")
+    plt.title(f"$M(R)$, {eos}")
+    plt.xlabel("$R$")
+
+    print(f"\nCritical radius: {R_crit:.4e}, Critical Mass: {M_crit:.4e}")
+
+    h_axis = R_vals * 1.63161
+    v_axis = M_vals * 2.4091
+    plt.plot(R_crit, M_crit, "ro")
+    plt.xlim(5,15)
+
+# plt.xscale("log")
+plt.plot(h_axis, v_axis)
+plt.savefig(f"./plots/{tag}_analysis,{eos}.pdf", bbox_inches = "tight")

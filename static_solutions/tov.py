@@ -16,9 +16,9 @@ eos_polytrope = 0
 eos_SLy       = 0
 eos_FPS       = 0
 
-eos_BSk19     = 0
+eos_BSk19     = 1
 eos_BSk20     = 0
-eos_BSk21     = 1
+eos_BSk21     = 0
 
 if eos_UR:
     eos = "UR"
