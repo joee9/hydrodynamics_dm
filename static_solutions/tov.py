@@ -69,7 +69,7 @@ else:
     interp_ps = df.iloc[:,1].to_numpy()
 
 
-rho_from_P_interp = interp1d(interp_ps, interp_rhos)
+rho_from_P_interp = interp1d(interp_ps, interp_rhos, fill_value="extrapolate")
 
 def rho_from_P(p):
     if eos_UR:
@@ -173,20 +173,3 @@ if p0_analysis:
     evolution(p0_vals)
 
     output.close()
-
-#%%
-# from aux.hd_eos import P 
-# # make SLy or FPS file
-# rhos = np.logspace(-14,0,14000,base=10.0)
-
-# # with open("./static_solutions/0-SLy_vals.vals", "w") as f:
-# #     for i in range(len(rhos)):
-# #         f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
-
-# with open("./static_solutions/0-FPS_vals.vals", "w") as f:
-#     for i in range(len(rhos)):
-#         f.write(f"{rhos[i]:.16e}, {P(rhos[i]):.16e}\n")
-
-# If this is needed, make sure to use the function P from aux.hd_eos;
-# make sure this file is in the home directory, and that
-# eos_SLy is set correctly in hd_params.

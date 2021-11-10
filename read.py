@@ -224,7 +224,9 @@ from scipy.optimize import minimize, fmin
 
 path = "./static_solutions/p0_analysis"
 # eos = "polytrope"
-eos = "SLy"
+# eos = "SLy"
+eos = "FPS"
+
 pmin = 1e-6
 pmax = 1e-1
 
@@ -244,8 +246,10 @@ print(f"\nCritical pressure: {p0_crit:.4e}, Critical Mass: {M_crit:.4e}")
 
 plt.xscale("log")
 plt.title(f"$M(P_0)$, {eos}")
+plt.text(1e-3,1,"$P_{crit} = $" + f"{p0_crit:.4e}")
+plt.text(1e-3,.8,"$M_{crit}$ = " + f"{M_crit:.4e}")
+
 plt.xlabel("$P_0$")
 plt.plot(p0_vals, M_vals)
 plt.plot(p0_crit, M_crit, "ro")
-plt.savefig(f"./p0_analysis,polytrope.pdf", bbox_inches = "tight")
-
+plt.savefig(f"./plots/p0_analysis,{eos}.pdf", bbox_inches = "tight")
