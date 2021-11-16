@@ -228,8 +228,8 @@ M_vs_p0 = 0
 path = "./static_solutions/p0_analysis"
 # eos = "polytrope"
 # eos = "SLy"
-eos = "FPS"
-# eos = "BSk19"
+# eos = "FPS"
+eos = "BSk19"
 # eos = "BSk20"
 # eos = "BSk21"
 
@@ -269,20 +269,20 @@ if M_vs_R:
     R_crit = fmin(R_interp, crit_R_guess)[0]
     M_crit = 1/(R_interp(R_crit))
 
-    R_crit *= 1.63161 # km
-    M_crit *= 2.4091  # solar masses
+    M_crit *= 1.63161 # km
+    R_crit *= 2.4091 # km
 
-    plt.text(10,2,"$R_{crit} = $" + f"{R_crit:.4e}")
-    plt.text(10,1.75,"$M_{crit}$ = " + f"{M_crit:.4e}")
+    plt.text(8.5,.65,"$R_{crit} = $" + f"{R_crit:.4e}")
+    plt.text(8.5,.5,"$M_{crit}$ = " + f"{M_crit:.4e}")
     plt.title(f"$M(R)$, {eos}")
     plt.xlabel("$R$")
 
     print(f"\nCritical radius: {R_crit:.4e}, Critical Mass: {M_crit:.4e}")
 
-    h_axis = R_vals * 1.63161
-    v_axis = M_vals * 2.4091
+    h_axis = R_vals * 2.4091
+    v_axis = M_vals * 1.63161
     plt.plot(R_crit, M_crit, "ro")
-    plt.xlim(5,15)
+    plt.xlim(8,15)
 
 # plt.xscale("log")
 plt.plot(h_axis, v_axis)
