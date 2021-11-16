@@ -13,10 +13,10 @@ import matplotlib.pyplot as plt
 eos_UR        = 0
 eos_polytrope = 0
 
-eos_SLy       = 0
+eos_SLy       = 1
 eos_FPS       = 0
 
-eos_BSk19     = 1
+eos_BSk19     = 0
 eos_BSk20     = 0
 eos_BSk21     = 0
 
@@ -163,7 +163,7 @@ if make_static_solution:
 # P0 ANALYSIS
 
 if p0_analysis:
-    output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.txt","w")
+    output = open(f"{path}/{eos},p{pmin:.3e}-p{pmax:.3e}.vals","w")
 
     print(f"Number of points:{len(p0_vals)}; for EoS: {eos}")
 
