@@ -5,20 +5,16 @@
 # jitted code; the evolution function, in this file is jitted for much more speed than before
 
 #%%
-from hd_params               import *
+from hd_params          import *
 
-from aux.hd_eos              import *
-from aux.hd_equations        import *
-from aux.hd_ic               import *
-from aux.hd_ops              import *
-from aux.hd_riemann          import *
+from aux.hd_eos         import *
+from aux.hd_equations   import *
+from aux.hd_ic          import *
+from aux.hd_ops         import *
+from aux.hd_riemann     import *
+from aux.hd_write       import *
+from aux.hd_evolution   import *
 
-if not darkmatter:
-    from aux.hd_write        import *
-    from aux.hd_evolution    import *
-elif darkmatter:
-    from aux.hd_write_dm     import *
-    from aux.hd_evolution_dm import *
 
 NUM_STORED = T_STEPS_ARRAY
 

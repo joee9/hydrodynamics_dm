@@ -25,37 +25,24 @@ def getvals(input):
 
 # ========== PRIMITIVES
 
-if not darkmatter:
-    if PRIM_IC == "TOV solution polytrope":
+if PRIM_IC == "TOV solution polytrope":
 
+    if charge:
+        rho_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
+        p_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
+    if not charge:
         rho_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
         p_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
 
-        initial_rho_vals = getvals(rho_file)
-        initial_p_vals = getvals(p_file)
+    initial_rho_vals = getvals(rho_file)
+    initial_p_vals = getvals(p_file)
 
-    if PRIM_IC == "TOV solution fit":
-        rho_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
-        p_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
+if PRIM_IC == "TOV solution fit":
+    rho_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
+    p_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
 
-        initial_rho_vals = getvals(rho_file)
-        initial_p_vals = getvals(p_file)
-
-if darkmatter:
-    if PRIM_IC == "TOV solution polytrope":
-
-        rho_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
-        p_file = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
-
-        initial_rho_vals = getvals(rho_file)
-        initial_p_vals = getvals(p_file)
-
-    if PRIM_IC == "TOV solution fit":
-        rho_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_rho.txt"
-        p_file = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}_P.txt"
-
-        initial_rho_vals = getvals(rho_file)
-        initial_p_vals = getvals(p_file)
+    initial_rho_vals = getvals(rho_file)
+    initial_p_vals = getvals(p_file)
 
 
 @njit
