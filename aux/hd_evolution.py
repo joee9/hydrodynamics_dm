@@ -42,30 +42,75 @@ def calc_gravity_functions(a, alpha, u, prim, phi1, phi2, rhos):
     initializeEvenVPs(a)
     initializeEvenVPs(alpha, spacing="staggered")
 
+@njit
+def calc_sf_outer_boundary_phi_Y(h, i, kphi1, kphi2, phi1, phi2):
+    r_p1h = R(i+1/2)
+
+    kphi1[i,phi_i] = h * outer_dphi_dt(r_p1h, phi1[i,:])
+    kphi1[i,Y_i]   = h * outer_dY_dt(r_p1h, phi1[i,:], phi1[i-1,:], phi1[i-2])
+
+    kphi2[i,phi_i] = h * outer_dphi_dt(r_p1h, phi2[i,:])
+    kphi2[i,Y_i]   = h * outer_dY_dt(r_p1h, phi2[i,:], phi2[i-1,:], phi2[i-2])
+
+@njit
+def calc_sf_outer_boundary_X(i, phi1, phi2):
+    r_p1h = R(i+1/2)
+    phi1[i,X_i] = outer_X(r_p1h, phi1[i,:])
+    phi2[i,X_i] = outer_X(r_p1h, phi2[i,:])
+
 # calculate k values in evolution
 @njit
-def calculate_kval(h, ku, alpha, a, u, F1, F2, rhos):
+def calculate_kval(h, ku, kphi1, kphi2, alpha, a, u, phi1, phi2, F1, F2, rhos):
 
     for i in range(NUM_VPOINTS, NUM_SPOINTS-2):
-        # print(f"{i=}\n")
 
         alpha_m1h = alpha[i-1]
         alpha_p1h = alpha[i]
-        # alpha_p3h = alpha[i+1]
+        alpha_p3h = alpha[i+1]
         alpha_ = (alpha_p1h + alpha_m1h)/2
 
         a_ = a[i]
         a_p1h = (a[i] + a[i+1])/2
         a_m1h = (a[i] + a[i-1])/2
-        if i>NUM_VPOINTS:
+        a_p3h = (a[i+1] + a[i+2])/2
+        
+        phi1_p1h = phi1[i,:]
+        phi1_p3h = phi1[i+1,:]
+        phi1_m1h = phi1[i-1,:]
+        
+        phi2_p1h = phi2[i,:]
+        phi2_p3h = phi2[i+1,:]
+        phi2_m1h = phi2[i-1,:]
+        # print(f"{i=}\n")
+
+        # alpha_m1h = alpha[i-1]
+        # alpha_p1h = alpha[i]
+        # # alpha_p3h = alpha[i+1]
+        # alpha_ = (alpha_p1h + alpha_m1h)/2
+
+        # a_ = a[i]
+        # a_p1h = (a[i] + a[i+1])/2
+        # a_m1h = (a[i] + a[i-1])/2
+        if i >= NUM_VPOINTS:
+            kphi1[i,phi_i]  = h * dphi1_dt(phi1[i,:], phi2[i,:], a_p1h, alpha_p1h)
+            kphi1[i,X_i]    = h * dX1_dt(i, phi1_p3h, phi1_m1h, phi2_p1h, a_p3h, a_m1h, alpha_p3h, alpha_m1h)   
+            kphi1[i,Y_i]    = h * dY1_dt(i, phi1_p1h, phi1_p3h, phi1_m1h, phi2_p1h, a_p1h, a_p3h, a_m1h, alpha_p1h, alpha_p3h, alpha_m1h) 
+
+            kphi2[i,phi_i]  = h * dphi2_dt(phi1[i,:], phi2[i,:], a_p1h, alpha_p1h)
+            kphi2[i,X_i]    = h * dX2_dt(i, phi2_p3h, phi2_m1h, phi1_p1h, a_p3h, a_m1h, alpha_p3h, alpha_m1h)   
+            kphi2[i,Y_i]    = h * dY2_dt(i, phi2_p1h, phi2_p3h, phi2_m1h, phi1_p1h, a_p1h, a_p3h, a_m1h, alpha_p1h, alpha_p3h, alpha_m1h) 
+
+        if i > NUM_VPOINTS:
             ku[i,:] = h * du_dt(i, rhos[i], u[i,:], a_, a_p1h, a_m1h, alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
 
 
 @njit
-def evolution_rk3(cons,prim,a,alpha,curr,next):
+def evolution_rk3(cons,prim,sc1,sc2,a,alpha,curr,next):
 
     # Pi, Phi across space (i, func) at a given timestep
     u = cons[curr,:,:]
+    phi1 = sc1[curr,:,:]
+    phi2 = sc2[curr,:,:]
 
     rhos = prim[curr,:,1] # used for Newton-Rhapson method as guesses
 
@@ -92,8 +137,17 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     k2u = np.zeros((NUM_SPOINTS,2))
     k3u = np.zeros((NUM_SPOINTS,2))
 
+    k1phi1 = np.zeros((NUM_SPOINTS,3))
+    k2phi1 = np.zeros((NUM_SPOINTS,3))
+    k3phi1 = np.zeros((NUM_SPOINTS,3))
+
+    k1phi2 = np.zeros((NUM_SPOINTS,3))
+    k2phi2 = np.zeros((NUM_SPOINTS,3))
+    k3phi2 = np.zeros((NUM_SPOINTS,3))
+
     # calculate k1
-    calculate_kval(h, k1u, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
+    # calculate_kval(h, k1u, alpha[curr,:], a[curr,:], u, F1, F2, rhos)
+    calculate_kval(h, k1u, k1phi1, k1phi2, alpha[curr,:], a[curr,:], u, phi1, phi2, F1, F2, rhos)
 
     # intermediate calculations
     uk1 = u+k1u
@@ -114,6 +168,25 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     uk1[NUM_SPOINTS-1] = uk1[NUM_SPOINTS-3]
     uk1[NUM_SPOINTS-2] = uk1[NUM_SPOINTS-3]
 
+    # outer boundary for scalar fields
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-2, k1phi1, k1phi2, phi1, phi2)
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-1, k1phi1, k1phi2, phi1, phi2)
+
+    # calculate shifted arrays
+    phi1k1 = phi1+k1phi1
+    phi2k1 = phi2+k1phi2
+
+    calc_sf_outer_boundary_X(NUM_SPOINTS-2, phi1k1, phi2k1)
+    calc_sf_outer_boundary_X(NUM_SPOINTS-1, phi1k1, phi2k1)
+
+    initializeEvenVPs(phi1k1[:,phi_i], "staggered")
+    initializeOddVPs(phi1k1[:,X_i])
+    initializeEvenVPs(phi1k1[:,Y_i], "staggered")
+    
+    initializeEvenVPs(phi2k1[:,phi_i], "staggered")
+    initializeOddVPs(phi2k1[:,X_i])
+    initializeEvenVPs(phi2k1[:,Y_i], "staggered")
+
     # cell reconstruction
     uLk1 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
     uRk1 = np.zeros((NUM_SPOINTS,2))         # u as calculated at C.B. using the right values
@@ -127,7 +200,8 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
         F1k1[i,:], F2k1[i,:] = findFluxes(i, uLk1[i,:], uRk1[i,:], rhos[i], rhos[i-1], rhos[i+1])
 
     # calculate k2
-    calculate_kval(h, k2u, alpha[curr,:], a[curr,:], uk1, F1k1, F2k1, rhos)
+    # calculate_kval(h, k2u, alpha[curr,:], a[curr,:], uk1, F1k1, F2k1, rhos)
+    calculate_kval(h, k2u, k2phi1, k2phi2, alpha[curr,:], a[curr,:], uk1, phi1k1, phi2k1, F1k1, F2k1, rhos)
 
     uk12 = u+(k1u + k2u)/4
     # floor the updated u values
@@ -147,6 +221,24 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     uk12[NUM_SPOINTS-1] = uk12[NUM_SPOINTS-3]
     uk12[NUM_SPOINTS-2] = uk12[NUM_SPOINTS-3]
 
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-2, k2phi1, k2phi2, phi1k1, phi2k1)
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-1, k2phi1, k2phi2, phi1k1, phi2k1)
+
+    # calculate shifted arrays
+    phi1k12 = phi1+(k1phi1+k2phi1)/4
+    phi2k12 = phi2+(k1phi2+k2phi2)/4
+
+    calc_sf_outer_boundary_X(NUM_SPOINTS-2, phi1k12, phi2k12)
+    calc_sf_outer_boundary_X(NUM_SPOINTS-1, phi1k12, phi2k12)
+
+    initializeEvenVPs(phi1k12[:,phi_i], "staggered")
+    initializeOddVPs(phi1k12[:,X_i])
+    initializeEvenVPs(phi1k12[:,Y_i], "staggered")
+    
+    initializeEvenVPs(phi2k12[:,phi_i], "staggered")
+    initializeOddVPs(phi2k12[:,X_i])
+    initializeEvenVPs(phi2k12[:,Y_i], "staggered")
+
     uLk12 = np.zeros((NUM_SPOINTS,2))        # u as calculated at the cell boarder using the left values
     uRk12 = np.zeros((NUM_SPOINTS,2))         # u as calculated at C.B. using the right values
     cell_reconstruction(uk12,uLk12,uRk12)
@@ -160,12 +252,28 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
         
 
     #calc k3
-    calculate_kval(h, k3u, alpha[curr,:], a[curr,:], uk12, F1k12, F2k12, rhos)
+    # calculate_kval(h, k3u, alpha[curr,:], a[curr,:], uk12, F1k12, F2k12, rhos)
+    calculate_kval(h, k3u, k3phi1, k3phi2, alpha[curr,:], a[curr,:], uk12, phi1k12, phi2k12, F1k12, F2k12, rhos)
+
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-2, k3phi1, k3phi2, phi1k12, phi2k12)
+    calc_sf_outer_boundary_phi_Y(h, NUM_SPOINTS-1, k3phi1, k3phi2, phi1k12, phi2k12)
 
     # conservative functions
     for i in range(NUM_VPOINTS+1,NUM_SPOINTS-2):
         cons[next,i,:] = cons[curr,i,:] + 1/6 * (k1u[i,:] + k2u[i,:] + 4*k3u[i,:])
-        
+    
+    for i in range(NUM_VPOINTS, NUM_SPOINTS-2):
+        sc1[next,i,:] = sc1[curr,i,:] + 1/6 * (k1phi1[i,:] + k2phi1[i,:] + 4*k3phi1[i,:])
+        sc2[next,i,:] = sc2[curr,i,:] + 1/6 * (k1phi2[i,:] + k2phi2[i,:] + 4*k3phi2[i,:])
+
+    for i in [NUM_SPOINTS-2, NUM_SPOINTS-1]:
+        sc1[next, i, phi_i] = sc1[curr, i, phi_i] + 1/6 * (k1phi1[i, phi_i] + k2phi1[i, phi_i] + 4 * k3phi1[i,phi_i])
+        sc1[next, i, Y_i]   = sc1[curr, i, Y_i]   + 1/6 * (k1phi1[i, Y_i]   + k2phi1[i, Y_i]   + 4 * k3phi1[i,Y_i])
+
+        sc2[next, i, phi_i] = sc2[curr, i, phi_i] + 1/6 * (k1phi2[i, phi_i] + k2phi2[i, phi_i] + 4 * k3phi2[i,phi_i])
+        sc2[next, i, Y_i]   = sc2[curr, i, Y_i]   + 1/6 * (k1phi2[i, Y_i]   + k2phi2[i, Y_i]   + 4 * k3phi2[i,Y_i])
+
+        calc_sf_outer_boundary_X(i, sc1[next,:,:], sc2[next,:,:])
 
     checkFloor(cons[next,:,Pi_i])
     checkFloor(cons[next,:,Phi_i])
@@ -185,6 +293,15 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
     # virtual points
     initializeEvenVPs(cons[next,:,Pi_i])
     initializeEvenVPs(cons[next,:,Phi_i])
+
+    # inner boundary for scalar fields
+    initializeEvenVPs(sc1[next,:,phi_i], "staggered")
+    initializeOddVPs(sc1[next,:,X_i])
+    initializeEvenVPs(sc1[next,:,Y_i], "staggered")
+
+    initializeEvenVPs(sc2[next,:,phi_i], "staggered")
+    initializeOddVPs(sc2[next,:,X_i])
+    initializeEvenVPs(sc2[next,:,Y_i], "staggered")
     
 
     # ========== CALCULATE PRIMITIVES ========== #
@@ -203,7 +320,8 @@ def evolution_rk3(cons,prim,a,alpha,curr,next):
 
     # ========== CALCULATE GRAVITY FUNCTIONS ========== #
 
-    calc_gravity_functions(a[next,:], alpha[next,:], cons[next,:,:], prim[next,:,:])
+    calc_gravity_functions(a[next,:], alpha[next,:], cons[next,:,:], prim[next,:,:], sc1[next,:,:], sc2[next,:,:], rhos)
+    # calc_gravity_functions(a[next,:], alpha[next,:], cons[next,:,:], prim[next,:,:])
 
 # @njit
 # def evolution_modified_euler(cons,prim,a,alpha,curr,next):

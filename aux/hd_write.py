@@ -36,8 +36,10 @@ def params_print():
         f.write(f"\n")
         f.write(f"Primitive IC      = {PRIM_IC}\n")
         if PRIM_IC_TOV:
-            f.write(f"    p0            = {p_val}")
-        # f.write(f"Scalar Field IC = {SF_IC}\n")
+            f.write(f"    p0            = {p_val}\n")
+        f.write(f"Scalar Field IC = {SF_IC}\n")
+        if SF_IC_TOV:
+            f.write(f"    vc0           = {vc_val}\n")
 
         # TODO: add print statments that print out the number of tsteps, rsteps, etc. that are actually saved to file
 
@@ -94,6 +96,14 @@ if record_data:
     rho_out     = open(f"{path}{output_number}-rho.txt", mode)
     v_out       = open(f"{path}{output_number}-v.txt", mode)
 
+    phi1_out    = open(f"{path}{output_number}-phi1.txt", "w")
+    X1_out      = open(f"{path}{output_number}-X1.txt", "w")
+    Y1_out      = open(f"{path}{output_number}-Y1.txt", "w")
+
+    phi2_out    = open(f"{path}{output_number}-phi2.txt", "w")
+    X2_out      = open(f"{path}{output_number}-X2.txt", "w")
+    Y2_out      = open(f"{path}{output_number}-Y2.txt", "w")
+
     alpha_out   = open(f"{path}{output_number}-alpha.txt", mode)
     a_out       = open(f"{path}{output_number}-a.txt", mode)
 
@@ -104,6 +114,14 @@ if record_data:
         P_out,
         rho_out,
         v_out,
+
+        phi1_out,
+        X1_out,
+        Y1_out,
+
+        phi2_out,
+        X2_out,
+        Y2_out,
 
         alpha_out,
         a_out,
@@ -173,6 +191,14 @@ def output_close():
         P_out.close()
         rho_out.close()
         v_out.close()
+
+        phi1_out.close()
+        X1_out.close()
+        Y1_out.close()
+
+        phi2_out.close()
+        X2_out.close()
+        Y2_out.close()
 
         alpha_out.close()
         a_out.close()

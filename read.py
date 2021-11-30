@@ -75,7 +75,7 @@ if f_v:
     save_name = "v"
     ring_idx = 6
 if f_alpha:
-    file_path = f"{path}-alpha.txt"
+    file_path = f"{path:s}-alpha.txt"
     title = "$\\alpha$"
     save_name = "alpha"
     ring_idx = 7

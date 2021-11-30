@@ -25,9 +25,8 @@ cons = np.zeros((NUM_STORED,NUM_SPOINTS,2))    # contains conservative variables
 alpha = np.zeros((NUM_STORED,NUM_SPOINTS))        
 a = np.zeros((NUM_STORED,NUM_SPOINTS))
 
-if darkmatter:
-    sc1 = np.zeros((NUM_STORED, NUM_SPOINTS, 3)) # X_i, Y_i indexed as 1, 2 respectiely; for both scalar fields
-    sc2 = np.zeros((NUM_STORED, NUM_SPOINTS, 3))
+sc1 = np.zeros((NUM_STORED, NUM_SPOINTS, 3)) # X_i, Y_i indexed as 1, 2 respectiely; for both scalar fields
+sc2 = np.zeros((NUM_STORED, NUM_SPOINTS, 3))
 
 rs = np.zeros(NUM_SPOINTS)
 for i in range(NUM_SPOINTS):
@@ -63,7 +62,7 @@ checkFloor(cons[0,:,Pi_i])
 checkFloor(cons[0,:,Phi_i])
 
 # construct gravity equations at n = 0
-calc_gravity_functions(a[0,:], alpha[0,:], cons[0,:,:], prim[0,:,:])
+calc_gravity_functions(a[0,:], alpha[0,:], cons[0,:,:], prim[0,:,:], sc1[0,:,:], sc2[0,:,:], prim[0,:,rho_i])
 
 # initialize all virtual points
 initializeEvenVPs(prim[0,:,Pi_i])
@@ -71,6 +70,14 @@ initializeEvenVPs(prim[0,:,rho_i])
 
 initializeEvenVPs(cons[0,:,Pi_i])
 initializeEvenVPs(cons[0,:,Phi_i])
+
+initializeEvenVPs(sc1[0,:,phi_i], spacing="staggered")
+initializeOddVPs (sc1[0,:,X_i])
+initializeEvenVPs(sc1[0,:,Y_i], spacing="staggered")
+
+initializeEvenVPs(sc2[0,:,phi_i], spacing="staggered")
+initializeOddVPs (sc2[0,:,X_i])
+initializeEvenVPs(sc2[0,:,Y_i], spacing="staggered")
 
 initializeEvenVPs(a[0,:])
 initializeEvenVPs(alpha[0,:], spacing="staggered")
@@ -85,6 +92,14 @@ arrays = [
     prim[0,:,P_i], 
     prim[0,:,rho_i], 
     prim[0,:,v_i], 
+
+    sc1[0,:,phi_i],
+    sc1[0,:,X_i],
+    sc1[0,:,Y_i],
+
+    sc2[0,:,phi_i],
+    sc2[0,:,X_i],
+    sc2[0,:,Y_i],
 
     alpha[0,:], 
     a[0,:]
@@ -126,7 +141,7 @@ for n in range(NUM_TPOINTS-1):
         next = 0
 
     if int_rk3:
-        evolution_rk3(cons,prim,a,alpha,curr,next)
+        evolution_rk3(cons,prim,sc1,sc2,a,alpha,curr,next)
 
     arrays = [
         cons[next,:,Pi_i], 
@@ -135,6 +150,14 @@ for n in range(NUM_TPOINTS-1):
         prim[next,:,P_i], 
         prim[next,:,rho_i], 
         prim[next,:,v_i], 
+
+        sc1[next,:,phi_i],
+        sc1[next,:,X_i],
+        sc1[next,:,Y_i],
+
+        sc2[next,:,phi_i],
+        sc2[next,:,X_i],
+        sc2[next,:,Y_i],
 
         alpha[next,:], 
         a[next,:]
