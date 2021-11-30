@@ -5,12 +5,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.fft import fft,fftshift
-
-# from hd_params import NUM_SPOINTS
-# from hd_params import NUM_SPOINTS
-# TODO: actually calculate NUM_SPOINTS from params file
-# NUM_SPOINTS = 5000
-
 #%%
 
 output_number = 1
@@ -200,7 +194,7 @@ if dim == "ringdown":
         phi1 = df.iloc[:last_idx,phi1_ridx].to_numpy()
         phi2 = df.iloc[:last_idx,phi2_ridx].to_numpy()
         v_axis = np.sqrt(phi1**2 + phi2**2)
-        v_axis = np.log10(v_axis)
+        # v_axis = np.log10(v_axis)
     h_label = "t"
 
     save_name += f",ringdown"
