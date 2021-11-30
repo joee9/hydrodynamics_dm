@@ -6,23 +6,27 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.fft import fft,fftshift
 
+# from hd_params import NUM_SPOINTS
+# from hd_params import NUM_SPOINTS
+NUM_SPOINTS = 5000
+
 #%%
 
 output_number = 1
 save_fig = 0
 
-# dim = "s"
-dim = "ringdown"
+dim = "s"
+# dim = "ringdown"
 
 # fft parameters
-FFT = 1
+FFT = 0
 FFT_spikes = 0     # reads in frequencies from the file path/freqs.txt for plotting
 fft_xmin = .5e-1
 fft_xmax = 1e0
 
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
-t = -1
+t = 0
 
 f_Pi    = 0
 f_Phi   = 0
@@ -31,8 +35,18 @@ f_P     = 1
 f_rho   = 0
 f_v     = 0
 
+f_phi1  = 0
+f_X1    = 0 
+f_Y1    = 0
+
+f_phi2  = 0
+f_X2    = 0 
+f_Y2    = 0
+
 f_alpha = 0
 f_a     = 0
+
+absphi  = 0
 
 
 # ========== READING IN FILES, PARAMETERS
@@ -74,16 +88,62 @@ if f_v:
     title = "$v$"
     save_name = "v"
     ring_idx = 6
+if f_phi1:
+    file_path = f"{path:s}-phi1.txt"
+    title = "$\\phi_{1}$"
+    save_name = "phi1"
+    ring_idx = 7
+if f_X1:
+    file_path = f"{path:s}-X1.txt"
+    title = "$X_{1}$"
+    save_name = "X1"
+    ring_idx = 8
+if f_Y1:
+    file_path = f"{path:s}-Y1.txt"
+    title = "$Y_{1}$"
+    save_name = "Y1"
+    ring_idx = 9
+if f_phi2:
+    file_path = f"{path:s}-phi2.txt"
+    title = "$\\phi_{2}$"
+    save_name = "phi2"
+    ring_idx = 10
+if f_X2:
+    file_path = f"{path:s}-X2.txt"
+    title = "$X_{2}$"
+    save_name = "X2"
+    ring_idx = 11
+if f_Y2:
+    file_path = f"{path:s}-Y2.txt"
+    title = "$Y_{2}$"
+    save_name = "Y2"
+    ring_idx = 12
 if f_alpha:
     file_path = f"{path:s}-alpha.txt"
     title = "$\\alpha$"
     save_name = "alpha"
-    ring_idx = 7
+    ring_idx = 13
 if f_a:
     file_path = f"{path:s}-a.txt"
     title = "$a$"
     save_name = "a"
-    ring_idx = 8
+    ring_idx = 14
+
+if absphi:
+    phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
+    phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
+    phi1_vals = phi1.iloc[i,:].to_numpy()
+    phi2_vals = phi2.iloc[i,:].to_numpy()
+
+    mag = []
+    for k in range(NUM_SPOINTS):
+        varphi1 = phi1_vals[k]
+        varphi2 = phi2_vals[k]
+        # print(f"{k=}{varphi1=}{varphi2=}")
+        mag.append(np.sqrt(varphi1**2 + varphi2**2))
+    
+    title = "$|\\varphi|$"
+    save_name = "absvarphi"
     
 save_name = f"plots/{output_number:d}-{save_name}"
 
@@ -94,6 +154,7 @@ if dim == "s":
 
     h_axis = rs.to_numpy().flatten()
     v_axis = df.iloc[i,:].to_numpy()
+    if absphi: v_axis = mag
     h_label = "$r$"
 
     title += f", $t$ = {t:.1f}"
