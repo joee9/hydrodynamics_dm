@@ -34,7 +34,10 @@ def getvals(input):
     with open(input, "r") as f:
         for i in range(NUM_SPOINTS-NUM_VPOINTS):
             val = f.readline()
-            if (val != ""):    vals.append(val)
+            if (val != ""):    
+                if "\n" in val: val.replace("\n", "")
+                val = float(val)
+                vals.append(val)
             else: vals.append(0)
 
     vals = np.array(vals)
@@ -42,6 +45,14 @@ def getvals(input):
 
     return vals
 
+def init_p_from_rho(rhos):
+    ps = []
+    for i in range(len(rhos)):
+        # print(rhos[i])
+        if rhos[i] == 0: ps.append(0)
+        else: ps.append(P(rhos[i]))
+    
+    return np.array(ps)
 # ========== PRIMITIVES
 
 
@@ -50,21 +61,22 @@ if PRIM_IC == "TOV solution polytrope":
     vals_path = f"input/polytrope_K{K:.1f}_gamma{Gamma:.1f}_p{p_val:.8f}_vc{vc_val:.8f}_lam{Lambda:.3f}_dr{dr:.3f}"
 
     rho_file = f"{vals_path}_rho.txt"
-    p_file = f"{vals_path}_P.txt"
+    # p_file = f"{vals_path}_P.txt"
 
     initial_rho_vals = getvals(rho_file)
-    initial_p_vals = getvals(p_file)
+    initial_p_vals = init_p_from_rho(initial_rho_vals)
+
 
 if PRIM_IC == "TOV solution fit":
 
     vals_path = f"input/{eos}_p{p_val:.8f}_vc{vc_val:.8f}_lam{Lambda:.3f}_dr{dr:.3f}"
 
     rho_file = f"{vals_path}_rho.txt"
-    p_file = f"{vals_path}_P.txt"
+    # p_file = f"{vals_path}_P.txt"
 
     initial_rho_vals = getvals(rho_file)
-    initial_p_vals = getvals(p_file)
-
+    # print(initial_rho_vals)
+    initial_p_vals = init_p_from_rho(initial_rho_vals)
 
 @njit
 def rho_gaussian(r):
@@ -159,8 +171,9 @@ if not SF_IC == "Gaussian":
         Y_file = f"{vals_path}_Y.txt"
 
     if SF_IC == "TOV solution fit":
+        # vals_path = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}"
 
-        vals_path = f"input/{eos}_p{p_val:.8f}_dr{dr:.3f}"
+        vals_path = f"input/{eos}_p{p_val:.8f}_vc{vc_val:.8f}_lam{Lambda:.3f}_dr{dr:.3f}"
 
         varphi_file = f"{vals_path}_varphi.txt"
         X_file = f"{vals_path}_X.txt"

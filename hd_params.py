@@ -34,8 +34,8 @@ darkmatter = False
 eos_UR        = 0
 eos_polytrope = 0
 
-eos_SLy       = 0
-eos_FPS       = 1
+eos_SLy       = 1
+eos_FPS       = 0
 
 eos_BSk19     = 0
 eos_BSk20     = 0
@@ -62,16 +62,16 @@ if eos_polytrope:
 
 
 # general parameters for TOV solutions
-p_val = 1e-4
-vc_val = 1e-4
+p_val = 0.00305762
+vc_val = 10**(-1.5)
 
 # ========== INITIAL CONDITIONS
 
 PRIM_IC_GAUSSIAN = 0
 PRIM_IC_TOV = 1
 
-SF_IC_GAUSSIAN = 1
-SF_IC_TOV = 0
+SF_IC_GAUSSIAN = 0
+SF_IC_TOV = 1
 
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
@@ -152,7 +152,7 @@ floor = 1E-15
 NR_MAX_ITERATIONS = 50
 NR_TOL = 1E-7
 
-mu = 1
+mu = 1.22089
 Lambda = 0
 G = 1
 

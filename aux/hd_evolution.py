@@ -74,6 +74,8 @@ def calculate_kval(h, ku, kphi1, kphi2, alpha, a, u, phi1, phi2, F1, F2, rhos):
         a_m1h = (a[i] + a[i-1])/2
         a_p3h = (a[i+1] + a[i+2])/2
         
+        phi1_ = (phi1[i,:] + phi1[i-1,:])/2
+        phi2_ = (phi2[i,:] + phi2[i-1,:])/2
         phi1_p1h = phi1[i,:]
         phi1_p3h = phi1[i+1,:]
         phi1_m1h = phi1[i-1,:]
@@ -101,7 +103,7 @@ def calculate_kval(h, ku, kphi1, kphi2, alpha, a, u, phi1, phi2, F1, F2, rhos):
             kphi2[i,Y_i]    = h * dY2_dt(i, phi2_p1h, phi2_p3h, phi2_m1h, phi1_p1h, a_p1h, a_p3h, a_m1h, alpha_p1h, alpha_p3h, alpha_m1h) 
 
         if i > NUM_VPOINTS:
-            ku[i,:] = h * du_dt(i, rhos[i], u[i,:], a_, a_p1h, a_m1h, alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
+            ku[i,:] = h * du_dt(i, rhos[i], u[i,:], phi1_, phi2_, a_, a_p1h, a_m1h, alpha_, alpha_p1h, alpha_m1h, F1[i,:], F1[i-1,:], F2[i,:], F2[i-1,:])
 
 
 @njit
