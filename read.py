@@ -9,7 +9,7 @@ from scipy.fft import fft,fftshift
 # from hd_params import NUM_SPOINTS
 # from hd_params import NUM_SPOINTS
 # TODO: actually calculate NUM_SPOINTS from params file
-NUM_SPOINTS = 5000
+# NUM_SPOINTS = 5000
 
 #%%
 
@@ -18,6 +18,10 @@ save_fig = 0
 
 # dim = "s"
 dim = "ringdown"
+
+# plotting parameters
+h_log = 0
+v_log = 0
 
 # fft parameters
 FFT = 0
@@ -60,6 +64,17 @@ with open(f"{path:s}-0params.txt", "r") as params:
     interval = int(s.replace("Write interval    = ", ""))
     s = params.readline()
     ring_interval = int(s.replace("Ring interval     = ", ""))
+    s = params.readline()
+    dr = round(float(s.replace("dr                = ", "")), 2)
+    s = params.readline()
+    dt = round(float(s.replace("dt                = ", "")), 2)
+    s = params.readline()
+    rmin = int(s.replace("rmin              = ", ""))
+    s = params.readline()
+    rmax = int(s.replace("rmax              = ", ""))
+
+NUM_SPOINTS = int((rmax - rmin)/dr)
+print(NUM_SPOINTS)
 
 dt = 0.01
 i = round(t /(interval * dt))
@@ -132,6 +147,7 @@ if f_a:
     ring_idx = 14
 
 if absphi:
+    ring_idx = 2 # not actually used, just a temp value
     phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
     phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
     phi1_vals = phi1.iloc[i,:].to_numpy()
@@ -235,7 +251,9 @@ save_name += f".pdf"
 plt.title(title)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
-# plt.yscale("log")
+
+if h_log: plt.xscale("log")
+if v_log: plt.yscale("log")
         
 if save_fig:
     plt.savefig(save_name, bbox_inches = "tight")
