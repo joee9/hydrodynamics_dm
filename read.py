@@ -8,6 +8,7 @@ from scipy.fft import fft,fftshift
 
 # from hd_params import NUM_SPOINTS
 # from hd_params import NUM_SPOINTS
+# TODO: actually calculate NUM_SPOINTS from params file
 NUM_SPOINTS = 5000
 
 #%%
@@ -15,8 +16,8 @@ NUM_SPOINTS = 5000
 output_number = 1
 save_fig = 0
 
-dim = "s"
-# dim = "ringdown"
+# dim = "s"
+dim = "ringdown"
 
 # fft parameters
 FFT = 0
@@ -26,12 +27,13 @@ fft_xmax = 1e0
 
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
-t = 0
+t = -1
+# t = 10
 
 f_Pi    = 0
 f_Phi   = 0
 
-f_P     = 1
+f_P     = 0
 f_rho   = 0
 f_v     = 0
 
@@ -40,13 +42,13 @@ f_X1    = 0
 f_Y1    = 0
 
 f_phi2  = 0
-f_X2    = 0 
+f_X2    = 0
 f_Y2    = 0
 
 f_alpha = 0
 f_a     = 0
 
-absphi  = 0
+absphi  = 1
 
 
 # ========== READING IN FILES, PARAMETERS
@@ -176,6 +178,13 @@ if dim == "ringdown":
     title += f", $r = 0$"
     h_axis = df.iloc[:last_idx,1].to_numpy() # time
     v_axis = df.iloc[:last_idx,ring_idx].to_numpy() # pressure
+    if absphi:
+        phi1_ridx = 7
+        phi2_ridx = 10
+        phi1 = df.iloc[:last_idx,phi1_ridx].to_numpy()
+        phi2 = df.iloc[:last_idx,phi2_ridx].to_numpy()
+        v_axis = np.sqrt(phi1**2 + phi2**2)
+        v_axis = np.log10(v_axis)
     h_label = "t"
 
     save_name += f",ringdown"
@@ -226,6 +235,7 @@ save_name += f".pdf"
 plt.title(title)
 plt.xlabel(h_label)
 plt.plot(h_axis,v_axis)
+# plt.yscale("log")
         
 if save_fig:
     plt.savefig(save_name, bbox_inches = "tight")
