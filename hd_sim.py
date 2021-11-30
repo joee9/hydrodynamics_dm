@@ -5,16 +5,15 @@
 # jitted code; the evolution function, in this file is jitted for much more speed than before
 
 #%%
-from hd_params          import *
+from hd_params           import *
 
-from aux.hd_eos         import *
-from aux.hd_equations   import *
-from aux.hd_ic          import *
-from aux.hd_ops         import *
-from aux.hd_riemann     import *
-from aux.hd_write       import *
-from aux.hd_evolution   import *
-
+from aux.hd_eos          import *
+from aux.hd_equations    import *
+from aux.hd_ic           import *
+from aux.hd_ops          import *
+from aux.hd_riemann      import *
+from aux.hd_write        import *
+from aux.hd_evolution    import *
 
 NUM_STORED = T_STEPS_ARRAY
 
@@ -26,6 +25,9 @@ cons = np.zeros((NUM_STORED,NUM_SPOINTS,2))    # contains conservative variables
 alpha = np.zeros((NUM_STORED,NUM_SPOINTS))        
 a = np.zeros((NUM_STORED,NUM_SPOINTS))
 
+if darkmatter:
+    sc1 = np.zeros((NUM_STORED, NUM_SPOINTS, 3)) # X_i, Y_i indexed as 1, 2 respectiely; for both scalar fields
+    sc2 = np.zeros((NUM_STORED, NUM_SPOINTS, 3))
 
 rs = np.zeros(NUM_SPOINTS)
 for i in range(NUM_SPOINTS):
@@ -41,6 +43,14 @@ prim[0,:,v_i] = np.zeros(NUM_SPOINTS) # velocity initialized to zero
 prim[0,:,P_i] += 1E-15
 prim[0,:,rho_i] += 1E-15
 
+sc1[0,:,phi_i] = initial_phi1_vals
+sc1[0,:,X_i] = initial_X1_vals
+sc1[0,:,Y_i] = initial_Y1_vals
+
+sc2[0,:,phi_i] = initial_phi2_vals
+sc2[0,:,X_i] = initial_X2_vals
+sc2[0,:,Y_i] = initial_Y2_vals
+
 # conservative data
 for i in range(NUM_SPOINTS): 
     cons[0,i,Pi_i] = Pi(prim[0,i,:])
@@ -54,31 +64,6 @@ checkFloor(cons[0,:,Phi_i])
 
 # construct gravity equations at n = 0
 calc_gravity_functions(a[0,:], alpha[0,:], cons[0,:,:], prim[0,:,:])
-
-# # calculate a across the spatial points at t = 0
-
-# a[0,NUM_VPOINTS] = 1
-# h = dr
-
-# for i in range(NUM_VPOINTS,NUM_SPOINTS-1):
-#     r_ = R(i)
-#     a_ = a[0,i]
-
-#     u = cons[0,i,:]
-#     u_p1 = cons[0,i+1,:]
-#     u_p1h = (u+u_p1)/2
-
-#     k1 = h * fa0(r_,a_,u)
-#     k2 = h * fa0(r_ + h/2, a_ + k1/2, u_p1h)
-
-#     a[0,i+1] = a[0,i] + k2
-
-
-# # calculate alpha at each cell boundary, storing it at the gridpoint to its left
-# alpha[0,NUM_SPOINTS-1] = (1/2 * (a[0,NUM_SPOINTS-1] + a[0,NUM_SPOINTS-2]))**(-1) # average of last two a values
-# for i in range(NUM_SPOINTS-1, NUM_VPOINTS, -1): # start at last boundary and move inwards
-
-#     alpha[0,i-1] = falpha(alpha[0,i], R(i), cons[0,i,:], prim[0,i,:], a[0,i])
 
 # initialize all virtual points
 initializeEvenVPs(prim[0,:,Pi_i])
@@ -142,8 +127,6 @@ for n in range(NUM_TPOINTS-1):
 
     if int_rk3:
         evolution_rk3(cons,prim,a,alpha,curr,next)
-    elif int_modified_euler:
-        evolution_modified_euler(cons,prim,a,alpha,curr,next)
 
     arrays = [
         cons[next,:,Pi_i], 

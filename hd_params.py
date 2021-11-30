@@ -20,16 +20,15 @@ path = "data/"
 
 # ========== NUMERICAL INTEGRATION METHOD
 
-int_modified_euler = 1
-int_rk3 = 0
+# int_modified_euler = 1
+int_rk3 = 1
 
-if int_modified_euler:  int_method = "modified euler"
+# if int_modified_euler:  int_method = "modified euler"
 if int_rk3:             int_method = "RK3"
 
 # ========== EQUATION OF STATE
 
 darkmatter = False 
-charge     = False
 
 # different EOS
 eos_UR        = 0
@@ -64,11 +63,15 @@ if eos_polytrope:
 
 # general parameters for TOV solutions
 p_val = 1e-4
+vc_val = 1e-4
 
 # ========== INITIAL CONDITIONS
 
 PRIM_IC_GAUSSIAN = 0
 PRIM_IC_TOV = 1
+
+SF_IC_GAUSSIAN = 1
+SF_IC_TOV = 0
 
 # primitive variables
 if  PRIM_IC_GAUSSIAN:
@@ -80,9 +83,29 @@ if  PRIM_IC_GAUSSIAN:
 
 if PRIM_IC_TOV:
     if eos_polytrope:
-        PRIM_IC = "TOV solution polytrope"    # from Ben
+        PRIM_IC = "TOV solution polytrope"
     else:
-        PRIM_IC = "TOV solution fit"            # from Ben
+        PRIM_IC = "TOV solution fit"
+        
+# TODO: change these parameter names to be different than for prim gaussian (ie A1, etc.)
+if SF_IC_GAUSSIAN:
+	# parameters for first scalar field
+	A_1 = 1e-5
+	r0_1 = 5
+	d_1 = 2
+
+	# parameters for second scalar field
+	A_2 = 1e-5
+	r0_2 = 10
+	d_2 = 2
+
+	SF_IC = "Gaussian"
+
+if SF_IC_TOV:
+    if eos_polytrope:
+        SF_IC = "TOV solution polytrope"
+    else:
+        SF_IC = "TOV solution fit"
 
 
 # ========== GRID PARAMETERS
@@ -144,3 +167,13 @@ Phi_i = 1
 phi_i = 0
 X_i = 1
 Y_i = 2
+
+# MISC WARNINGS
+# if darkmatter and int_modified_euler:
+#     print("Using modified Euler with darkmatter; will not be stable!")
+#     exit()
+
+# ensure not overwriting data
+while os.path.exists(f"{path}/{output_number}-0params.txt"):
+    output_number += 1
+    print(f"Updating output number; now {output_number}.")
