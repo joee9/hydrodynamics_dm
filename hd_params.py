@@ -10,7 +10,7 @@ from time import process_time
 
 # for recording data
 
-record_data = 1
+record_data = 0
 record_ringdown = 1
 output_number = 1   
 
@@ -112,7 +112,7 @@ if SF_IC_TOV:
 
 dr      = 0.02
 rmin    = 0
-rmax    = 100
+rmax    = 350
 
 gamma   = 0.5
 tmin    = 0

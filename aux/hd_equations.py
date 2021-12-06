@@ -174,7 +174,7 @@ def calc_Tf_tr(u, a, alpha, rho0):
 def calc_Tf_rr(u, a, alpha, rho0):
     Pi, Phi = u
     p, rho, v = calcPrims(u, rho0)
-    return (1/2)*(Pi + Phi)*v + p
+    return (1/2)*(Pi - Phi)*v + p
 
 # boson sector
 @njit
