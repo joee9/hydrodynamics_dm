@@ -37,7 +37,7 @@ def params_print():
         f.write(f"Primitive IC      = {PRIM_IC}\n")
         if PRIM_IC_TOV:
             f.write(f"    p0            = {p_val}\n")
-        f.write(f"Scalar Field IC = {SF_IC}\n")
+        f.write(f"Scalar Field IC   = {SF_IC}\n")
         if SF_IC_TOV:
             f.write(f"    vc0           = {vc_val}\n")
 
