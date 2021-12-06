@@ -8,7 +8,7 @@ from scipy.fft import fft,fftshift
 #%%
 
 output_number = 2
-save_fig = 1
+save_fig = 0
 
 # dim = "s"
 dim = "ringdown"
@@ -189,7 +189,7 @@ if dim == "ringdown":
         last_idx = round(t/(ring_interval * dt))
         tmax = t
 
-    title += f", $r = 0$"
+    title += f"$(r = 0)$"
     h_axis = df.iloc[:last_idx,1].to_numpy() # time
 
     if absphi:
