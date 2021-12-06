@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from scipy.fft import fft,fftshift
 #%%
 
-output_number = 1
-save_fig = 0
+output_number = 2
+save_fig = 1
 
 # dim = "s"
 dim = "ringdown"
@@ -25,13 +25,13 @@ fft_xmax = 1e0
 
 # for "s", this is the time snapshot.
 # for "ringdown", the max time plotted to. -1 will plot all values
-t = -1
+t = 100
 # t = 10
 
 f_Pi    = 0
 f_Phi   = 0
 
-f_P     = 0
+f_P     = 1
 f_rho   = 0
 f_v     = 0
 
@@ -46,7 +46,7 @@ f_Y2    = 0
 f_alpha = 0
 f_a     = 0
 
-absphi  = 1
+absphi  = 0
 
 
 # ========== READING IN FILES, PARAMETERS
@@ -139,34 +139,38 @@ if f_a:
     title = "$a$"
     save_name = "a"
     ring_idx = 14
-
 if absphi:
-    ring_idx = 2 # not actually used, just a temp value
-    phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
-    phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
-    phi1_vals = phi1.iloc[i,:].to_numpy()
-    phi2_vals = phi2.iloc[i,:].to_numpy()
-
-    mag = []
-    for k in range(NUM_SPOINTS):
-        varphi1 = phi1_vals[k]
-        varphi2 = phi2_vals[k]
-        # print(f"{k=}{varphi1=}{varphi2=}")
-        mag.append(np.sqrt(varphi1**2 + varphi2**2))
-    
     title = "$|\\varphi|$"
     save_name = "absvarphi"
     
+
 save_name = f"plots/{output_number:d}-{save_name}"
 
 if dim == "s":
 
-    df = pd.read_csv(file_path, header=None)
     rs = pd.read_csv(f"{path:s}-r.txt", header=None)
-
     h_axis = rs.to_numpy().flatten()
-    v_axis = df.iloc[i,:].to_numpy()
-    if absphi: v_axis = mag
+
+    if absphi:
+        phi1 = pd.read_csv(f"data/{output_number:d}-phi1.txt", header=None)
+        phi2 = pd.read_csv(f"data/{output_number:d}-phi2.txt", header=None)
+        phi1_vals = phi1.iloc[i,:].to_numpy()
+        phi2_vals = phi2.iloc[i,:].to_numpy()
+
+        mag = []
+
+        for k in range(NUM_SPOINTS):
+            varphi1 = phi1_vals[k]
+            varphi2 = phi2_vals[k]
+            # print(f"{k=}{varphi1=}{varphi2=}")
+            mag.append(np.sqrt(varphi1**2 + varphi2**2))
+
+        v_axis = mag
+
+    else:
+        df = pd.read_csv(file_path, header=None)
+        v_axis = df.iloc[i,:].to_numpy()
+
     h_label = "$r$"
 
     title += f", $t$ = {t:.1f}"
@@ -187,14 +191,15 @@ if dim == "ringdown":
 
     title += f", $r = 0$"
     h_axis = df.iloc[:last_idx,1].to_numpy() # time
-    v_axis = df.iloc[:last_idx,ring_idx].to_numpy() # pressure
+
     if absphi:
         phi1_ridx = 7
         phi2_ridx = 10
         phi1 = df.iloc[:last_idx,phi1_ridx].to_numpy()
         phi2 = df.iloc[:last_idx,phi2_ridx].to_numpy()
         v_axis = np.sqrt(phi1**2 + phi2**2)
-        # v_axis = np.log10(v_axis)
+    else:
+        v_axis = df.iloc[:last_idx,ring_idx].to_numpy()
     h_label = "t"
 
     save_name += f",ringdown"
